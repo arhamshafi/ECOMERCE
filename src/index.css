@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+ * {
+    font-family: 'Raleway', sans-serif;
+} 
+.tb_sh{
+    text-shadow: .1px .1px 2px black;
+}
+.tw_sh{
+    text-shadow: .1px .1px 2px white;
+}
+.to_sh{
+    text-shadow: .1px .1px 1px orangered;
+}
+.tg_sh{
+    text-shadow: .1px .1px 1px gray;
+}
+.xo_sh{
+    box-shadow: .1px .1px 5px 0px orangered;
+}
+.xg_sh{
+    box-shadow: .1px .1px 8px 0px gray;
+}
+.xw_sh{
+    box-shadow: .1px .1px 8px 0px white;
+}
+.xb_sh{
+    box-shadow: .1px .1px 8px 0px rgb(212, 212, 212);
+}
+
+.img_filter{
+    filter: drop-shadow(.1px .1px 5px rgb(120, 120, 120));
+}
+.img_filter2{
+    filter: drop-shadow(.1px .1px 5px rgb(252, 139, 26));
+}
+
+
+
+
+.custom-number-input::-webkit-outer-spin-button,
+.custom-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-number-input[type=number] {
+  -moz-appearance: textfield;
+}
+.img_shd{
+    filter: drop-shadow(.1px .1px 3px black);
+}
+
+::-webkit-scrollbar {
+  width: 5px; 
+  height: 1px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f97316;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ea580c;
+}
