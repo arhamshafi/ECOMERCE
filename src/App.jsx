@@ -30,7 +30,7 @@ function App() {
     <div className='select-none bg-gradient-to-tr from-gray-100 to-gray-300 '>
       <Auth_provider>
         <Router>
-          <AppRoutes /> 
+          <AppRoutes />
         </Router>
         <ToastContainer position="top-right" autoClose={2500} theme="colored" />
       </Auth_provider>

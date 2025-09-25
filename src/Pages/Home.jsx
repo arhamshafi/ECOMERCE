@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 function Home() {
 
   const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 35, seconds: 18 });
-  const [user, set_user] = useState(sessionStorage.getItem("active_user") ? JSON.parse(sessionStorage.getItem("active_user")) : "s")
+  const [user, set_user] = useState(sessionStorage.getItem("active_user") ? JSON.parse(sessionStorage.getItem("active_user")) : null)
 
   useEffect(() => {
     const timer = setInterval(() => {

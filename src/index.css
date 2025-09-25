@@ -1,40 +1,75 @@
 @import "tailwindcss";
 
- * {
-    font-family: 'Raleway', sans-serif;
-} 
-.tb_sh{
-    text-shadow: .1px .1px 2px black;
-}
-.tw_sh{
-    text-shadow: .1px .1px 2px white;
-}
-.to_sh{
-    text-shadow: .1px .1px 1px orangered;
-}
-.tg_sh{
-    text-shadow: .1px .1px 1px gray;
-}
-.xo_sh{
-    box-shadow: .1px .1px 5px 0px orangered;
-}
-.xg_sh{
-    box-shadow: .1px .1px 8px 0px gray;
-}
-.xw_sh{
-    box-shadow: .1px .1px 8px 0px white;
-}
-.xb_sh{
-    box-shadow: .1px .1px 8px 0px rgb(212, 212, 212);
+* {
+  font-family: 'Raleway', sans-serif;
 }
 
-.img_filter{
-    filter: drop-shadow(.1px .1px 5px rgb(120, 120, 120));
-}
-.img_filter2{
-    filter: drop-shadow(.1px .1px 5px rgb(252, 139, 26));
+.tb_sh {
+  text-shadow: .1px .1px 2px black;
 }
 
+.tw_sh {
+  text-shadow: .1px .1px 2px white;
+}
+
+.to_sh {
+  text-shadow: .1px .1px 1px orangered;
+}
+
+.tg_sh {
+  text-shadow: .1px .1px 1px gray;
+}
+
+.xo_sh {
+  box-shadow: .1px .1px 5px 0px orangered;
+}
+
+.xg_sh {
+  box-shadow: .1px .1px 8px 0px gray;
+}
+
+.xw_sh {
+  box-shadow: .1px .1px 8px 0px white;
+}
+
+.xb_sh {
+  box-shadow: .1px .1px 8px 0px rgb(212, 212, 212);
+}
+
+.img_filter {
+  filter: drop-shadow(.1px .1px 5px rgb(120, 120, 120));
+}
+
+.img_filter2 {
+  filter: drop-shadow(.1px .1px 5px rgb(252, 139, 26));
+}
+
+.error {
+  border: 2px solid red !important;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
 
 
 
@@ -47,12 +82,13 @@
 .custom-number-input[type=number] {
   -moz-appearance: textfield;
 }
-.img_shd{
-    filter: drop-shadow(.1px .1px 3px black);
+
+.img_shd {
+  filter: drop-shadow(.1px .1px 3px black);
 }
 
 ::-webkit-scrollbar {
-  width: 5px; 
+  width: 5px;
   height: 1px;
 }
 

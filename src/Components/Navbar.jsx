@@ -11,10 +11,8 @@ import { toast } from 'react-toastify';
 
 function Navbar() {
 
-  const { loading } = useAuth()
+  const { loading , user } = useAuth()
   const navigate = useNavigate()
-  const [user, set_user] = useState(sessionStorage.getItem("active_user") ? JSON.parse(sessionStorage.getItem("active_user")) : "w")
-
 
   return (
     <motion.div initial={{ opacity: 0, y: -90 }} exit={{ opacity: 0, y: -70, transition: { duration: .3 } }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut", opacity: { duration: 2 } }} className='w-full fixed top-5 left-0'>
@@ -40,7 +38,7 @@ function Navbar() {
                   theme: "colored"
                 })} > <IoBag /> </div>
                 <div className='w-[35px] h-[35px] rounded-full bg-white ob_sh flex justify-center items-center text-red-500  cursor-pointer hover:bg-white/70 transition-all duration-150 ease-out '> <IoHeart /> </div>
-                <div className='w-max h-[35px] rounded-2xl bg-white flex items-center gap-2 pl-3 pr-1 '> <p className='text-[15px] font-bold' >Arham Shafi</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </div>
+                <div className='w-max h-[35px] rounded-2xl bg-white flex items-center gap-2 pl-3 pr-1 '> <p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </div>
               </>
 
             ) : (

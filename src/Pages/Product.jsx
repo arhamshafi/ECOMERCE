@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import PageWrapper from "../Components/Motion"
 import { IoSearch } from "react-icons/io5";
 import { FcFilledFilter } from "react-icons/fc"
@@ -12,15 +12,33 @@ import { IoChevronBack } from "react-icons/io5";
 import { toast } from 'react-toastify';
 import { FaStar } from "react-icons/fa";
 import { IoEye } from "react-icons/io5";
-import { IoMdCart } from "react-icons/io";
+import { useAuth } from '../Context/Auth';
+import Loader from '../Components/Loader';
 
 
 function Product() {
 
+    const { user } = useAuth()
     const navigate = useNavigate()
     const [focus, setfocus] = useState(false)
-    const [user, set_user] = useState(sessionStorage.getItem("active_user") ? JSON.parse(sessionStorage.getItem("active_user")) : "s")
-    const [categories, set_categories] = useState([])
+    const [searchParam, setSearchParam] = useSearchParams()
+    const [category, setCategory] = useState(searchParam.get("category") || "")
+    const [sort, setSort] = useState(searchParam.get("sort") || "")
+    const [max_prc, setMax_prc] = useState(searchParam.get("max_prc") || "")
+    const [searchTerm, setSearchTerm] = useState(searchParam.get("search") || "")
+    const [current_page, set_current_page] = useState(1)
+    const [totalPages, setTotalPages] = useState(null)
+    const [categories, setCategories] = useState(null)
+    const [page_loader, set_page_loader] = useState(false)
+
+    // const fetch_categories = async () => {
+        // yhan categories fethc knri  distinc
+    //     try {
+
+    //     } catch (err) {
+
+    //     }
+    // }
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -32,35 +50,25 @@ function Product() {
 
     return (
         < PageWrapper >
+
+            <div className={`flex justify-center fixed top-0 left-0 z-20 items-center w-full h-screen backdrop-blur-sm transition-all bg-white/30 duration-200 ease-in-out ${ page_loader ? "visible opacity-100" : "invisible opacity-0" } `}> <Loader /> </div>
             <section className='w-full bg-gray-100 min-h-screen flex  '>
-
                 <div className='w-[20%] bg-white xb_sh h-[100vh] flex justify-center items-center  relative ' >
-
                     <FcFilledFilter className='text-9xl opacity-85 animate-bounce img_filter2 ' style={{ animation: "bounce 3s infinite" }} />
-
                     <div className='w-full h-full absolute top-0 left-0 z-10 p-5  '>
-
                         <div className='relative'>
                             < IoSearch className='absolute right-2.5 top-3.5 text-xl' />
                             <input type="text" className={` w-full h-[50px] rounded-xl bg-gray-100 pl-3 pr-8 outline-none border-2  ${focus ? "border-orange-400 xo_sh " : "border-transparent xb_sh"} `}
                                 placeholder='Search Products..' onFocus={() => setfocus(true)} onBlur={() => setfocus(false)} />
                         </div>
-
                         <h1 className='text-black font-bold mt-7 text-2xl tb_sh tracking-[2px] '>Brands : </h1>
-
                         <label htmlFor="el" className='flex items-center gap-2 mt-2 ' >
                             <Check_box id="el" />
                             <p className='text-black font-bold tracking-[2px]' >brand</p>
                         </label>
-
-
-
-
                     </div>
-
                 </div>
                 {/* /////////////////// PART 2 //////////////////// */}
-
                 <div className='w-[80%] h-[100vh] py-17 relative ' >
                     <div className='w-full h-max bg-gray-100 px-5 flex justify-between items-center absolute pt-6 top-0 left-0  '>
                         <button className='py-1 pl-2 pr-4 hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer tw_sh tracking-[2px] active:scale-100 xb_sh text-sm text-white flex items-center gap-2 bg-black rounded-lg' onClick={() => navigate("/")} > <IoChevronBack /> Back</button>
@@ -78,7 +86,7 @@ function Product() {
                                             theme: "colored"
                                         })} > <IoBag /> </div>
                                         <div className='w-[35px] h-[35px] rounded-full bg-white ob_sh flex justify-center items-center text-red-500  cursor-pointer hover:bg-white/70 transition-all duration-150 ease-out '> <IoHeart /> </div>
-                                        <div className='w-max h-[35px] rounded-2xl bg-white flex items-center gap-2 pl-3 pr-1 '> <p className='text-[15px] font-bold' >Arham Shafi</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </div>
+                                        <div className='w-max h-[35px] rounded-2xl bg-white flex items-center gap-2 pl-3 pr-1 '> <p className='text-[15px] font-bold' > {user?.name} </p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </div>
                                     </>
 
                                 ) : (
@@ -91,11 +99,14 @@ function Product() {
                         </div>
                     </div>
                     {/* ////////////  nav_2 // */}
-
                     <div className='w-full h-[50px] underline  text-sm flex items-center justify-center font-bold '> Category here soon .. </div>
-
                     <div className='w-full h-max border mt-3 flex justify-evenly items-center '>
                         {/* ////////////////// CARD ///////////////// */}
+
+                        {/* {product.description.length > 100
+                      ? `${product.description.substring(0, 100)}...`
+                      : product.description
+                    } */}
                         <div className='w-[280px] mt-5 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative '>
                             <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center '> <IoHeart /> </div>
                             <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center'  > <IoEye /> </div>
@@ -105,7 +116,7 @@ function Product() {
                                 <div className='w-max flex justify-center items-center gap-1'><FaStar className='text-yellow-400 text-md' /> <p className='text-[15px] text-black/60 '>4.8 (128)</p> </div>
                             </div>
                             <h1 className='mt-2 text-black text-lg font-bold tb_sh '></h1>
-                            <p className='text-[13px] text-black/50 mt-2'>des</p>
+                            <p className='text-[13px] text-black/50 mt-2'>dessssss</p>
                             <p className='text-3xl mt-2 text-green-400 font-bold'> $ 12 <span className='line-through text-lg -mt-4 text-black/40 font-normal '>$ 12</span> </p>
                             <div className='w-full h-[50px] flex mt-3 gap-2 '>
                                 <button className='py-1 px-8 rounded-md bg-orange-500 cursor-pointer xo_sh hover:scale-102 transition-all duration-200 ease-in-out active:scale-100 text-white font-bold text-xl back'>ADD TO CART</button>
@@ -113,9 +124,7 @@ function Product() {
                             </div>
                         </div>
                     </div>
-
                 </div>
-
             </section>
         </ PageWrapper>
     )
