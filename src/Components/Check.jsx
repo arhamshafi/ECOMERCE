@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Check_box = ( {id} ) => {
+const Check_box = ( {id , checked , onChange } ) => {
   return (
     <StyledWrapper>
       <label className="container">
-        <input defaultChecked="checked" type="checkbox" id={id} />
+        <input type="checkbox" id={id} checked={checked} onChange={onChange} />
         <div className="checkmark" />
       </label>
     </StyledWrapper>

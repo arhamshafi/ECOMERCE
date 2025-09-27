@@ -27,23 +27,25 @@
 .xg_sh {
   box-shadow: .1px .1px 8px 0px gray;
 }
-
 .xw_sh {
   box-shadow: .1px .1px 8px 0px white;
 }
-
 .xb_sh {
   box-shadow: .1px .1px 8px 0px rgb(212, 212, 212);
+}
+.xb_sh_in {
+  box-shadow:inset .3px .3px 10px 0px rgb(212, 212, 212);
+}
+.xb_sh_b {
+  box-shadow: 0 4px 3px -1px rgba(173, 173, 173, 0.2);
 }
 
 .img_filter {
   filter: drop-shadow(.1px .1px 5px rgb(120, 120, 120));
 }
-
 .img_filter2 {
   filter: drop-shadow(.1px .1px 5px rgb(252, 139, 26));
 }
-
 .error {
   border: 2px solid red !important;
   animation: shake 0.3s;
@@ -70,8 +72,6 @@
     transform: translateX(0);
   }
 }
-
-
 
 .custom-number-input::-webkit-outer-spin-button,
 .custom-number-input::-webkit-inner-spin-button {
