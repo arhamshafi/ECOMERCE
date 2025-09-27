@@ -99,10 +99,18 @@ export const Auth_provider = ({ children }) => {
         }
     }
 
+    const Logout = () => {
+      sessionStorage.removeItem("token")
+      sessionStorage.removeItem("active_user")
+      dispatch({type : "auth_fail" , payload : "log out"})
+      return { success : true }
+    }
+
     const obj = {
         ...state,
         register,
-        Login
+        Login,
+        Logout
     }
 
     return (

@@ -16,7 +16,7 @@ import { FaXmark } from "react-icons/fa6";
 
 function Navbar() {
 
-  const { user } = useAuth()
+  const { user , Logout } = useAuth()
   const navigate = useNavigate()
   const [nav_list, set_nav_list] = useState(false)
 
@@ -50,7 +50,13 @@ function Navbar() {
                   <Link to={"/product"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Products </p> <HiTemplate className='text-gray-500' /> </Link>
                   <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
                   <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
-                  <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Log Out </p> <HiLogout className='text-red-500' /> </div>
+                  <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 ' onClick={() => {
+                    const res = Logout()
+                    if (res.success) {
+                      toast.info("User Log Out",{autoClose:1000})
+                      set_nav_list(false)
+                    }
+                  }} > <p className='text-[15px] font-bold' > Log Out </p> <HiLogout className='text-red-500' /> </div>
                 </div>
               </>
 

@@ -30,7 +30,7 @@ import { fetch_products_service, get_all_brand_service, get_categories_service }
 
 function Product() {
 
-    const { user } = useAuth()
+    const { user, Logout } = useAuth()
     const navigate = useNavigate()
     const [focus, setfocus] = useState(false)
     const [searchParam, setSearchParam] = useSearchParams()
@@ -205,7 +205,13 @@ function Product() {
                         <Link to={"/product"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Products </p> <HiTemplate className='text-gray-500' /> </Link>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
-                        <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Log Out </p> <HiLogout className='text-red-500' /> </div>
+                        <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 ' onClick={() => {
+                            const res = Logout()
+                            if (res.success) {
+                                toast.info("User Log Out",{autoClose:1000})
+                                set_nav_list(false)
+                            }
+                        }} > <p className='text-[15px] font-bold' > Log Out </p> <HiLogout className='text-red-500' /> </div>
                     </div>
 
                     <div className='w-[80%] h-max bg-white px-5 flex justify-between items-center fixed pt-6 pb-2.5 top-0 right-0 z-20  '>
