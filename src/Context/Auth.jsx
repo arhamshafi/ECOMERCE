@@ -39,7 +39,7 @@ export const Auth_provider = ({ children }) => {
 
     useEffect(() => {
         const user = sessionStorage.getItem("active_user") ? JSON.parse(sessionStorage.getItem("active_user")) : null
-        const token = sessionStorage.getItem("token") ? JSON.parse(sessionStorage.getItem("token")) : null
+        const token = sessionStorage.getItem("token") ? sessionStorage.getItem("token") : null
         dispatch({ type: "auth_success", payload: { user, token } })
     }, [])
 
@@ -59,7 +59,7 @@ export const Auth_provider = ({ children }) => {
             return { success: true }
 
         } catch (err) {
-            toast.error(err.response?.data?.message || "registration error"  , {
+            toast.error(err.response?.data?.message || "registration error", {
                 position: "top-center",
                 draggable: true,
                 closeOnClick: true,
@@ -87,7 +87,7 @@ export const Auth_provider = ({ children }) => {
             return { success: true }
 
         } catch (err) {
-            toast.error(err.response?.data?.message || "Login error" , {
+            toast.error(err.response?.data?.message || "Login error", {
                 position: "top-center",
                 draggable: true,
                 closeOnClick: true,
@@ -100,10 +100,10 @@ export const Auth_provider = ({ children }) => {
     }
 
     const Logout = () => {
-      sessionStorage.removeItem("token")
-      sessionStorage.removeItem("active_user")
-      dispatch({type : "auth_fail" , payload : "log out"})
-      return { success : true }
+        sessionStorage.removeItem("token")
+        sessionStorage.removeItem("active_user")
+        dispatch({ type: "auth_fail", payload: "log out" })
+        return { success: true }
     }
 
     const obj = {

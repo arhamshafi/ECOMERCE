@@ -9,6 +9,7 @@ import Login from './Pages/Login';
 import Register from './Pages/Register';
 import Product from './Pages/Product';
 import { AnimatePresence } from "framer-motion";
+import Detail from './Pages/Detail';
 
 
 function AppRoutes() {
@@ -20,6 +21,7 @@ function AppRoutes() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/product' element={<Product />} />
+        <Route path='/detail' element={<Detail />} />
       </Routes>
     </AnimatePresence>
   );

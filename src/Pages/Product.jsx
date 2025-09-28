@@ -21,11 +21,11 @@ import { IoFilter } from "react-icons/io5";
 import { LuArrowUpDown } from "react-icons/lu";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { TbRefresh } from "react-icons/tb";
-import { HiTemplate } from "react-icons/hi";
 import { HiLogout } from "react-icons/hi";
 import { FaList } from "react-icons/fa6";
 import { FaCrown } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
+import { FaHome } from "react-icons/fa";
 import { fetch_products_service, get_all_brand_service, get_categories_service } from '../services/Prd_ser';
 
 function Product() {
@@ -113,7 +113,12 @@ function Product() {
             }
         });
     }
+    const prd_detail = (product) => {
+    
+        sessionStorage.setItem("prd_detail" , JSON.stringify(product))
+        navigate("/detail")
 
+    }
     ////////////////////////////
     useEffect(() => {
         fetch_products()
@@ -202,7 +207,7 @@ function Product() {
 
                     <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-1 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18" : "invisible opacity-0 top-25 "} `}>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
-                        <Link to={"/product"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Products </p> <HiTemplate className='text-gray-500' /> </Link>
+                        <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-gray-500' /> </Link>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
                         <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 ' onClick={() => {
@@ -263,11 +268,11 @@ function Product() {
                                         return (
                                             < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative '>
                                                 <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center '> <IoHeart /> </div>
-                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center'  > <IoEye /> </div>
+                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={()=>prd_detail(crd)} > <IoEye /> </div>
                                                 <div className='w-full h-[150px] overflow-hidden ' > <img className='w-full object-contain h-full group-hover:scale-110 transition-all duration-300 ease-in-out ' src={crd?.image} alt="" />  </div>
                                                 <div className='w-full h-max flex justify-between items-center mt-3'>
                                                     <div className=' px-2 rounded-sm text-orange-600 bg-orange-600/20 text-sm tracking-[1px] capitalize '>{crd?.brand}</div>
-                                                    {crd?.nunumReviews > 0 && (<div className='w-max flex justify-center items-center gap-1'><FaStar className='text-yellow-400 text-md' /> <p className='text-[15px] text-black/60 '> {crd?.rating} ({crd?.numReviews}) </p> </div>)}
+                                                    {crd?.numReviews > 0 && (<div className='w-max flex justify-center items-center gap-1'><FaStar className='text-yellow-400 text-md' /> <p className='text-[15px] text-black/60 '> {crd?.rating} ({crd?.numReviews}) </p> </div>)}
 
 
                                                 </div>

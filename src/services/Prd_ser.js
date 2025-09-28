@@ -21,3 +21,10 @@ export const fetch_products_service = async (param) => {
     const { product, totalProducts, totalPages } = res.data
     return { product, totalProducts, totalPages }
 }
+
+export const add_reviews = async ( rating , comment , prd_id ) => {
+
+    const res = await api.post(`/prd/add_review/${prd_id}` , { rating , comment })
+    const {message , product } = res.data
+    return { message , product }
+}
