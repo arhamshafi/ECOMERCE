@@ -104,3 +104,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: #ea580c;
 }
+
+.invisible_scroll::-webkit-scrollbar {
+  width: 0px;
+  height: 1px;
+}
+
+.invisible_scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+

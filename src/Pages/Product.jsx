@@ -36,7 +36,7 @@ function Product() {
     const [searchParam, setSearchParam] = useSearchParams()
     const [category, setCategory] = useState(searchParam.get("category") || "")
     const [sort, setSort] = useState(searchParam.get("sort") || "")
-    const [max_prc, setMax_prc] = useState(searchParam.get("max_prc") || 500)
+    const [max_prc, setMax_prc] = useState(searchParam.get("max_prc") || 2200)
     const [searchTerm, setSearchTerm] = useState(searchParam.get("search") || "")
     const [current_page, set_current_page] = useState(1)
     const [totalPages, setTotalPages] = useState(null)
@@ -114,8 +114,8 @@ function Product() {
         });
     }
     const prd_detail = (product) => {
-    
-        sessionStorage.setItem("prd_detail" , JSON.stringify(product))
+
+        sessionStorage.setItem("prd_detail", JSON.stringify(product))
         navigate("/detail")
 
     }
@@ -205,15 +205,17 @@ function Product() {
                 {/* /////////////////// PART 2 //////////////////// */}
                 <div className='w-full min-h-[100vh] pt-[13%] pb-10 px-5 bg-gray-100 ' >
 
-                    <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-1 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18" : "invisible opacity-0 top-25 "} `}>
+                    <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-4 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18 right-4 " : "invisible opacity-0 top-25 "} `}>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
                         <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-gray-500' /> </Link>
                         <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
-                        <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
+                        {user?.role == "admin" &&
+                            <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
+                        }
                         <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 ' onClick={() => {
                             const res = Logout()
                             if (res.success) {
-                                toast.info("User Log Out",{autoClose:1000})
+                                toast.info("User Log Out", { autoClose: 1000 })
                                 set_nav_list(false)
                             }
                         }} > <p className='text-[15px] font-bold' > Log Out </p> <HiLogout className='text-red-500' /> </div>
@@ -225,15 +227,7 @@ function Product() {
                             {
                                 user ? (
                                     <>
-                                        <div className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center cursor-pointer hover:bg-gray-100 transition-all duration-150 ease-out ' onClick={() => toast.success("Comming Soon", {
-                                            position: "top-center",
-                                            autoClose: 2000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            theme: "colored"
-                                        })} > <IoBag /> </div>
+                                        <Link to={"/cart"} className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center cursor-pointer hover:bg-white/70 transition-all duration-150 ease-out ' > <IoBag /> </Link>
                                         <div className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center text-red-500  cursor-pointer hover:bg-gray-100 transition-all duration-150 ease-out '> <IoHeart /> </div>
                                         {/* <div className='w-max h-[35px] xb_sh rounded-2xl bg-white flex items-center gap-2 pl-3 pr-1 '> <p className='text-[15px] font-bold' > {user?.name} </p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </div> */}
                                         {/* ///// */}
@@ -266,9 +260,9 @@ function Product() {
                                 products.length == 0 ? (<div className='flex justify-center items-center flex-col gap-7 text-2xl text-gray-400 uppercase tracking-[3px] font-bold  '> <MdProductionQuantityLimits className='text-7xl' /> no product Found...</div>) :
                                     products.map((crd, i) => {
                                         return (
-                                            < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative '>
+                                            < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative' onClick={() => prd_detail(crd)} >
                                                 <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center '> <IoHeart /> </div>
-                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={()=>prd_detail(crd)} > <IoEye /> </div>
+                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={() => prd_detail(crd)} > <IoEye /> </div>
                                                 <div className='w-full h-[150px] overflow-hidden ' > <img className='w-full object-contain h-full group-hover:scale-110 transition-all duration-300 ease-in-out ' src={crd?.image} alt="" />  </div>
                                                 <div className='w-full h-max flex justify-between items-center mt-3'>
                                                     <div className=' px-2 rounded-sm text-orange-600 bg-orange-600/20 text-sm tracking-[1px] capitalize '>{crd?.brand}</div>
@@ -280,8 +274,8 @@ function Product() {
                                                 <p className='text-[13px] text-black/50 mt-2'>{crd?.description.length > 80 ? `${crd.description.substring(0, 80)}...` : crd.description}</p>
                                                 <p className='text-2xl mt-2 text-green-400 font-bold'>$ {crd?.discountedPrice}<span className='line-through text-sm ml-4 mt-4 text-black/40 font-normal '>$ {crd?.price}</span> </p>
                                                 <div className='w-full h-[50px] flex mt-4 gap-2 '>
-                                                    <button className='py-1 px-8 rounded-md bg-orange-500 cursor-pointer xo_sh hover:scale-102 transition-all duration-200 ease-in-out active:scale-100 text-white font-bold text-xl back'>ADD TO CART</button>
-                                                    <button className='py-1 px-3 text-2xl bg-black text-red-600 rounded-lg xb_sh cursor-pointer hover:scale-102 active:scale-100 transition-all duration-200 ease-in-out '> <IoHeart /> </button>
+                                                    <button className='w-[45%] h-[50px] bg-orange-500 text-white xo_sh rounded-3xl font-bold'>Add To Cart</button>
+                                                    <button className='w-[45%] h-[50px] bg-black xb_sh rounded-3xl text-white font-bold '>Buy Item</button>
                                                 </div>
                                             </motion.div>
                                         )
