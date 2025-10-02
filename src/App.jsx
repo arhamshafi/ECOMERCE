@@ -12,6 +12,7 @@ import { AnimatePresence } from "framer-motion";
 import Detail from './Pages/Detail';
 import Cart from './Pages/Cart';
 import { Cart_Provider } from './Context/Cartcontext';
+import Profile from './Pages/Profile';
 
 
 function AppRoutes() {
@@ -23,8 +24,9 @@ function AppRoutes() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/product' element={<Product />} />
-        <Route path='/detail' element={<Detail />} />
+        <Route path='/detail/:id' element={<Detail />} />
         <Route path='/cart' element={<Cart />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </AnimatePresence>
   );

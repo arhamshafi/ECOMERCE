@@ -27,10 +27,12 @@ import { FaCrown } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
 import { fetch_products_service, get_all_brand_service, get_categories_service } from '../services/Prd_ser';
+import { useCart } from '../Context/Cartcontext';
 
 function Product() {
 
     const { user, Logout } = useAuth()
+    const { Add_to_cart } = useCart()
     const navigate = useNavigate()
     const [focus, setfocus] = useState(false)
     const [searchParam, setSearchParam] = useSearchParams()
@@ -113,11 +115,11 @@ function Product() {
             }
         });
     }
-    const prd_detail = (product) => {
-
-        sessionStorage.setItem("prd_detail", JSON.stringify(product))
-        navigate("/detail")
-
+    const Add_cart = async (id) => {
+        const res = await Add_to_cart(id)
+        if (res?.success) {
+            toast.success(res?.message, { closeOnClick: true, draggable: true, position: "top-center" })
+        }
     }
     ////////////////////////////
     useEffect(() => {
@@ -168,16 +170,25 @@ function Product() {
                             <h1 className=' font-bold tracking-[2px] text-md '>Brand</h1>
                             {slct_brand.length !== 0 && (<TbRefresh className=' text-green-400 hover:text-red-400 cursor-pointer ' onClick={() => { set_slct_brand([]), set_current_page(1) }} />)}
                         </div>
-                        {/* <h1 className='text-black font-bold mt-4 text-xl tracking-[2px] '>Brands </h1> */}
                         <div className='w-full h-[60%] mt-1 pl-3 overflow-y-auto '>
                             {
                                 allBrands && allBrands.map((b, i) => {
                                     return (
 
-                                        <label key={i} htmlFor={b} className='flex items-center gap-2 mt-2 ' >
+                                        <motion.label initial={{ opacity: 0, scale: .9 }}
+                                            whileInView={{
+                                                opacity: 1,
+                                                scale: 1,
+                                                transition: {
+                                                    type: "spring",   // spring effect
+                                                    stiffness: 140,   // spring tightness
+                                                    damping: 13,       // bounce control (chhota rakho to zyada jiggle hoga)
+                                                    mass: 1,          // weight effect
+                                                }
+                                            }} key={i} htmlFor={b} className='flex items-center gap-2 mt-2 ' >
                                             <Check_box id={b} checked={slct_brand.includes(b)} onChange={() => handleBrandChange(b)} />
                                             <p className='text-gray-700 text-sm font-bold tracking-[2px]' >{b}</p>
-                                        </label>
+                                        </motion.label>
                                     )
                                 })
                             }
@@ -206,9 +217,8 @@ function Product() {
                 <div className='w-full min-h-[100vh] pt-[13%] pb-10 px-5 bg-gray-100 ' >
 
                     <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-4 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18 right-4 " : "invisible opacity-0 top-25 "} `}>
-                        <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
+                        <Link to={"/profile"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
                         <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-gray-500' /> </Link>
-                        <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
                         {user?.role == "admin" &&
                             <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
                         }
@@ -222,14 +232,13 @@ function Product() {
                     </div>
 
                     <div className='w-[80%] h-max bg-white px-5 flex justify-between items-center fixed pt-6 pb-2.5 top-0 right-0 z-20  '>
-                        <button className='py-1 pl-2 pr-4 hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer tw_sh tracking-[2px] active:scale-100 xb_sh text-sm text-white flex items-center gap-2 bg-black rounded-lg' onClick={() => navigate("/")} > <IoChevronBack /> Back</button>
+                        <button className='py-1 pl-2 pr-4 hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer tw_sh tracking-[2px] active:scale-100 xb_sh text-sm text-white flex items-center gap-2 bg-black rounded-lg  ' onClick={() => navigate("/")} > <IoChevronBack /> Back</button>
                         <div className='flex items-center gap-2  '>
                             {
                                 user ? (
                                     <>
                                         <Link to={"/cart"} className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center cursor-pointer hover:bg-white/70 transition-all duration-150 ease-out ' > <IoBag /> </Link>
                                         <div className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center text-red-500  cursor-pointer hover:bg-gray-100 transition-all duration-150 ease-out '> <IoHeart /> </div>
-                                        {/* <div className='w-max h-[35px] xb_sh rounded-2xl bg-white flex items-center gap-2 pl-3 pr-1 '> <p className='text-[15px] font-bold' > {user?.name} </p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </div> */}
                                         {/* ///// */}
                                         <div onClick={() => set_nav_list(prev => !prev)} className={`min-w-[35px] xb_sh cursor-pointer transition-all ease-in-out duration-200 h-[35px] rounded-2xl bg-white flex items-center ${nav_list ? "justify-center" : "gap-2 pl-3 pr-1"}  `}  > {nav_list ? <FaXmark /> : <> <p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </>} </div>
 
@@ -259,10 +268,12 @@ function Product() {
                             prd_loader ? (<div className='flex justify-center border bg-amber-300 w-max mx-auto relative mt-15 items-center'> <Loader_2 /> </div>) :
                                 products.length == 0 ? (<div className='flex justify-center items-center flex-col gap-7 text-2xl text-gray-400 uppercase tracking-[3px] font-bold  '> <MdProductionQuantityLimits className='text-7xl' /> no product Found...</div>) :
                                     products.map((crd, i) => {
+
+
                                         return (
-                                            < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative' onClick={() => prd_detail(crd)} >
+                                            < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} onClick={() => navigate(`/detail/${crd?._id}`)} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative' >
                                                 <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center '> <IoHeart /> </div>
-                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={() => prd_detail(crd)} > <IoEye /> </div>
+                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={() => navigate(`/detail/${crd?._id}`)} > <IoEye /> </div>
                                                 <div className='w-full h-[150px] overflow-hidden ' > <img className='w-full object-contain h-full group-hover:scale-110 transition-all duration-300 ease-in-out ' src={crd?.image} alt="" />  </div>
                                                 <div className='w-full h-max flex justify-between items-center mt-3'>
                                                     <div className=' px-2 rounded-sm text-orange-600 bg-orange-600/20 text-sm tracking-[1px] capitalize '>{crd?.brand}</div>
@@ -274,7 +285,7 @@ function Product() {
                                                 <p className='text-[13px] text-black/50 mt-2'>{crd?.description.length > 80 ? `${crd.description.substring(0, 80)}...` : crd.description}</p>
                                                 <p className='text-2xl mt-2 text-green-400 font-bold'>$ {crd?.discountedPrice}<span className='line-through text-sm ml-4 mt-4 text-black/40 font-normal '>$ {crd?.price}</span> </p>
                                                 <div className='w-full h-[50px] flex mt-4 gap-2 '>
-                                                    <button className='w-[45%] h-[50px] bg-orange-500 text-white xo_sh rounded-3xl font-bold'>Add To Cart</button>
+                                                    <button className='w-[45%] h-[50px] bg-orange-500 text-white xo_sh rounded-3xl font-bold' onClick={(e) => { e.stopPropagation(), Add_cart(crd?._id) }} >Add To Cart</button>
                                                     <button className='w-[45%] h-[50px] bg-black xb_sh rounded-3xl text-white font-bold '>Buy Item</button>
                                                 </div>
                                             </motion.div>
