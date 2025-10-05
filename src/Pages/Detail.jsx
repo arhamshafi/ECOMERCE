@@ -26,7 +26,7 @@ import Loader from '../Components/Loader';
 function Detail() {
 
     const { user, Logout } = useAuth()
-    const { Add_to_cart } = useCart()
+    const { Add_to_cart , cart } = useCart()
     const navigate = useNavigate()
     const [nav_list, set_nav_list] = useState(false)
     const [img_idx, set_img_idx] = useState(0)
@@ -64,7 +64,6 @@ function Detail() {
             }
 
             const { message, cart } = await add_reviews(rating_num, comment, id)
-            console.log(cart);
 
             sessionStorage.setItem("prd_detail", JSON.stringify(id))
             set_detail_prd(cart)
@@ -198,7 +197,7 @@ function Detail() {
                                 })}
                             </ul>
                             <div className='w-full flex items-center gap-3 h-max mt-7 '>
-                                <button className='w-[60%] cursor-pointer hover:scale-102 transition-all duration-200 ease-in-out py-2 rounded-md back text-white bg-orange-500 xo_sh text-xl font-bold tracking-[1px] active:scale-100 ' onClick={() => Add_cart(detail_prd?._id)} > 🛒 Add To Cart </button>
+                                <button className={`  ${ cart?.item?.some(ele => ele.product?._id == detail_prd?._id) ? "opacity-70" : "opacity-100" } w-[60%] cursor-pointer hover:scale-102 transition-all duration-200 ease-in-out py-2 rounded-md back text-white bg-orange-500 xo_sh text-xl font-bold tracking-[1px] active:scale-100 `} onClick={() => Add_cart(detail_prd?._id)} > { cart?.item?.some(ele => ele.product?._id == detail_prd?._id) ? "Already Added" : "🛒 Add To Cart" } </button>
                                 <div className='w-[45px] inner_sh h-[45px] rounded-lg flex justify-center items-center text-xl hover:text-lg transition-all duration-200 ease-in-out cursor-pointer  text-red-500 bg-black xb_xh '> <IoHeart /> </div>
                             </div>
                         </div>
@@ -243,7 +242,6 @@ function Detail() {
                         <div className='w-full mt-10 text-center '>
                             {
                                 detail_prd?.reviews?.map((ele, idx) => {
-                                    console.log(ele?.user?.name);
 
                                     return (
                                         <div key={idx} className='w-full flex bg-white rounded-2xl py-4 pl-5 xb_sh mt-4'>

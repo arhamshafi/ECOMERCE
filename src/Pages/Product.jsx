@@ -32,7 +32,7 @@ import { useCart } from '../Context/Cartcontext';
 function Product() {
 
     const { user, Logout } = useAuth()
-    const { Add_to_cart } = useCart()
+    const { Add_to_cart, cart } = useCart()
     const navigate = useNavigate()
     const [focus, setfocus] = useState(false)
     const [searchParam, setSearchParam] = useSearchParams()
@@ -175,9 +175,8 @@ function Product() {
                                 allBrands && allBrands.map((b, i) => {
                                     return (
 
-                                        <motion.label initial={{ opacity: 0, scale: .9 }}
+                                        <motion.label initial={{ scale: .9 }}
                                             whileInView={{
-                                                opacity: 1,
                                                 scale: 1,
                                                 transition: {
                                                     type: "spring",   // spring effect
@@ -285,8 +284,8 @@ function Product() {
                                                 <p className='text-[13px] text-black/50 mt-2'>{crd?.description.length > 80 ? `${crd.description.substring(0, 80)}...` : crd.description}</p>
                                                 <p className='text-2xl mt-2 text-green-400 font-bold'>$ {crd?.discountedPrice}<span className='line-through text-sm ml-4 mt-4 text-black/40 font-normal '>$ {crd?.price}</span> </p>
                                                 <div className='w-full h-[50px] flex mt-4 gap-2 '>
-                                                    <button className='w-[45%] h-[50px] bg-orange-500 text-white xo_sh rounded-3xl font-bold' onClick={(e) => { e.stopPropagation(), Add_cart(crd?._id) }} >Add To Cart</button>
-                                                    <button className='w-[45%] h-[50px] bg-black xb_sh rounded-3xl text-white font-bold '>Buy Item</button>
+                                                    <button className={`w-[45%] cursor-pointer h-[50px] ${cart?.item?.some(ele => ele.product?._id?.toString() === crd?._id?.toString()) ? "opacity-50" : "opacity-100" } bg-orange-500 text-white xo_sh rounded-3xl font-bold`} onClick={(e) => { e.stopPropagation(), Add_cart(crd?._id) }} > {cart?.item?.some(ele => ele.product?._id?.toString() === crd?._id?.toString()) ? "Already Added" : "Add To Cart"}  </button>
+                                                    <button className='w-[45%] h-[50px] bg-black xb_sh cursor-pointer rounded-3xl text-white font-bold '>Buy Item</button>
                                                 </div>
                                             </motion.div>
                                         )

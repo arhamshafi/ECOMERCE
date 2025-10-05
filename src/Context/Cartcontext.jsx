@@ -36,8 +36,6 @@ export const Cart_Provider = ({ children }) => {
         }
     }, [isAuthenticated, token])
 
-
-
     const fetch_cart = async () => {
         dispatch({ type: "set_loading" })
         try {
@@ -90,7 +88,8 @@ export const Cart_Provider = ({ children }) => {
         Add_to_cart,
         fetch_cart,
         remove_cart,
-        decreament_quan
+        decreament_quan,
+        dispatch
     }
     return (
         <CartContext.Provider value={value} >{children}</CartContext.Provider>
