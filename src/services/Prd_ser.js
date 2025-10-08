@@ -35,3 +35,16 @@ export const fetch_detail_service = async (id) => {
     const { success, detail } = res.data
     return { success, detail }
 }
+
+export const add_wishlist_Service = async (id) => {
+
+    const res = await api.post(`/prd/addWishlist/${id}`)
+    const { success, message } = res.data
+    return { success, message }
+}
+export const get_wishlist_service = async () => {
+
+    const res = await api.get("/prd/getWishlist")
+    const { wishlist, success } = res.data
+    return { wishlist, success }
+}

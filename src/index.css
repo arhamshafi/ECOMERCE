@@ -33,6 +33,9 @@
 .xb_sh {
   box-shadow: .1px .1px 8px 0px rgb(212, 212, 212);
 }
+.xr_sh {
+  box-shadow: .1px .1px 8px 0px red;
+}
 .xb_sh_in {
   box-shadow:inset .3px .3px 10px 0px rgb(212, 212, 212);
 }

@@ -32,7 +32,7 @@ import { useCart } from '../Context/Cartcontext';
 function Product() {
 
     const { user, Logout } = useAuth()
-    const { Add_to_cart, cart } = useCart()
+    const { Add_to_cart, cart, addWishlist, wishlist } = useCart()
     const navigate = useNavigate()
     const [focus, setfocus] = useState(false)
     const [searchParam, setSearchParam] = useSearchParams()
@@ -219,7 +219,7 @@ function Product() {
                         <Link to={"/profile"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
                         <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-gray-500' /> </Link>
                         {user?.role == "admin" &&
-                            <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
+                            <Link to={"/admin"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
                         }
                         <div className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 ' onClick={() => {
                             const res = Logout()
@@ -271,7 +271,7 @@ function Product() {
 
                                         return (
                                             < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} onClick={() => navigate(`/detail/${crd?._id}`)} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative' >
-                                                <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center '> <IoHeart /> </div>
+                                                <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center ' onClick={(e) => { addWishlist(crd?._id), e.stopPropagation() }} > <IoHeart /> </div>
                                                 <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={() => navigate(`/detail/${crd?._id}`)} > <IoEye /> </div>
                                                 <div className='w-full h-[150px] overflow-hidden ' > <img className='w-full object-contain h-full group-hover:scale-110 transition-all duration-300 ease-in-out ' src={crd?.image} alt="" />  </div>
                                                 <div className='w-full h-max flex justify-between items-center mt-3'>
@@ -284,7 +284,7 @@ function Product() {
                                                 <p className='text-[13px] text-black/50 mt-2'>{crd?.description.length > 80 ? `${crd.description.substring(0, 80)}...` : crd.description}</p>
                                                 <p className='text-2xl mt-2 text-green-400 font-bold'>$ {crd?.discountedPrice}<span className='line-through text-sm ml-4 mt-4 text-black/40 font-normal '>$ {crd?.price}</span> </p>
                                                 <div className='w-full h-[50px] flex mt-4 gap-2 '>
-                                                    <button className={`w-[45%] cursor-pointer h-[50px] ${cart?.item?.some(ele => ele.product?._id?.toString() === crd?._id?.toString()) ? "opacity-50" : "opacity-100" } bg-orange-500 text-white xo_sh rounded-3xl font-bold`} onClick={(e) => { e.stopPropagation(), Add_cart(crd?._id) }} > {cart?.item?.some(ele => ele.product?._id?.toString() === crd?._id?.toString()) ? "Already Added" : "Add To Cart"}  </button>
+                                                    <button className={`w-[45%] cursor-pointer h-[50px] ${cart?.item?.some(ele => ele.product?._id?.toString() === crd?._id?.toString()) ? "opacity-50" : "opacity-100"} bg-orange-500 text-white xo_sh rounded-3xl font-bold`} onClick={(e) => { e.stopPropagation(), Add_cart(crd?._id) }} > {cart?.item?.some(ele => ele.product?._id?.toString() === crd?._id?.toString()) ? "Already Added" : "Add To Cart"}  </button>
                                                     <button className='w-[45%] h-[50px] bg-black xb_sh cursor-pointer rounded-3xl text-white font-bold '>Buy Item</button>
                                                 </div>
                                             </motion.div>

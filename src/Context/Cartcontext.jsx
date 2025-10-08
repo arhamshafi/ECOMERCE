@@ -5,6 +5,8 @@ import { Add_cart_service, Cart_decr_service, Cart_service, remove_cart_service 
 import { useContext } from "react";
 import { createContext } from "react";
 import { toast } from "react-toastify";
+import { add_wishlist_Service, get_wishlist_service } from "../services/Prd_ser";
+import { cancel_order_Service } from "../services/Order_service";
 
 
 const CartContext = createContext()
@@ -25,12 +27,16 @@ const Cart_Reducer = (state, action) => {
 
 export const Cart_Provider = ({ children }) => {
 
-    const [state, dispatch] = useReducer(Cart_Reducer, initailState)
     const { isAuthenticated, token } = useAuth()
+    const [state, dispatch] = useReducer(Cart_Reducer, initailState)
+    const [wishlist, set_Wishlist] = useState(null)
+    // console.log(wishlist);
+
 
     useEffect(() => {
         if (isAuthenticated && token) {
             fetch_cart()
+            get_wish_list()
         } else {
             dispatch({ type: "clear_cart" })
         }
@@ -82,6 +88,42 @@ export const Cart_Provider = ({ children }) => {
         }
     }
 
+    const addWishlist = async (id) => {
+        try {
+            const { success, message } = await add_wishlist_Service(id)
+            if (success) {
+                toast.success(message, { position: "top-center", closeOnClick: true, draggable: true, autoClose: 1500 })
+            }
+
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Wishlist Added Error", { position: "top-center", closeOnClick: true, draggable: true, autoClose: 1000 })
+        }
+    }
+
+    const get_wish_list = async () => {
+        try {
+            const { wishlist, success } = await get_wishlist_service()
+            if (success) {
+                set_Wishlist(wishlist)
+            }
+        } catch (err) {
+            console.log(err?.response?.data?.message || "get wishlist error");
+
+        }
+    }
+    const cancel_order = async (id) => {
+        try {
+            const { message, success } = await cancel_order_Service(id)
+            if (success) {
+                toast.success(message, { position: "top-center", closeOnClick: true })
+                return { success: true }
+            }
+
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Order Cancelation Error", { position: "top-center" })
+        }
+    }
+
 
     const value = {
         ...state,
@@ -89,7 +131,10 @@ export const Cart_Provider = ({ children }) => {
         fetch_cart,
         remove_cart,
         decreament_quan,
-        dispatch
+        dispatch,
+        addWishlist,
+        wishlist,
+        cancel_order
     }
     return (
         <CartContext.Provider value={value} >{children}</CartContext.Provider>

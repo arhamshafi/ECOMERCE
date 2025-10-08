@@ -13,6 +13,12 @@ import Detail from './Pages/Detail';
 import Cart from './Pages/Cart';
 import { Cart_Provider } from './Context/Cartcontext';
 import Profile from './Pages/Profile';
+import AdminDashboard from './Pages/AdminDashboard';
+import OrderManagment from './Pages/OrderManagment';
+import UserManagment from './Pages/UserManagment';
+import Protected_route from './Components/Protected_route';
+import OverView from './Pages/OverView';
+import Unauthorized from './Pages/Unauthorized';
 
 
 function AppRoutes() {
@@ -27,6 +33,20 @@ function AppRoutes() {
         <Route path='/detail/:id' element={<Detail />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/notfound' element={< Unauthorized />} />
+
+        {/* /// admin routes //  */}
+        
+{/* not found page ata bar bar  */}
+
+        <Route path="/admin" element={ <Protected_route role={"admin"} > <AdminDashboard/> </Protected_route> } >
+
+        <Route index element={<OverView/>} />
+        <Route path="/admin/ord_managment" element={<OrderManagment/>} />
+        <Route path="/admin/user_managment" element={<UserManagment/>} />
+        
+        </Route>
+        
       </Routes>
     </AnimatePresence>
   );
@@ -40,7 +60,7 @@ function App() {
           <Router>
             <AppRoutes />
           </Router>
-          <ToastContainer position="top-right" autoClose={2500} theme="colored" />
+          <ToastContainer position="top-right" autoClose={2000} theme="colored" />
         </Cart_Provider>
       </Auth_provider>
     </div>
