@@ -1,6 +1,5 @@
 import React from 'react'
 import { Auth_provider } from "./Context/Auth"
-import Navbar from './Components/Navbar'
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,6 +24,7 @@ function AppRoutes() {
   const location = useLocation();
   return (
     <AnimatePresence mode="wait">
+
       <Routes location={location} key={location.pathname}>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
@@ -60,7 +60,7 @@ function App() {
           <Router>
             <AppRoutes />
           </Router>
-          <ToastContainer position="top-right" autoClose={2000} theme="colored" />
+          <ToastContainer position="top-center" closeOnClick:true autoClose={2000} theme="colored" />
         </Cart_Provider>
       </Auth_provider>
     </div>

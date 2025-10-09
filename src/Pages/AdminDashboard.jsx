@@ -12,8 +12,9 @@ import { BiLogIn } from "react-icons/bi";
 import { FaAmericanSignLanguageInterpreting } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import { FaCrown } from "react-icons/fa";
-import { get_order_admin_service } from '../services/Admin_services';
-import { useNavigate, Link, Outlet } from 'react-router-dom';
+import { fetch_product_admin_service, get_order_admin_service, fetching_user_service } from '../services/Admin_services';
+import { useNavigate, Link, Outlet, useSearchParams } from 'react-router-dom';
+import { useCart } from '../Context/Cartcontext';
 
 
 
@@ -21,13 +22,47 @@ function AdminDashboard() {
 
     const navigate = useNavigate()
     const { user } = useAuth()
+    const { cancel_order } = useCart()
     const [nav_list, set_nav_list] = useState(false)
+    // const [product, setProduct] = useState([])
     const [ord, setord] = useState([])
-    
+    const [allusers, set_allusers] = useState([])
+    const [role, setRole] = useState("")
+    const [userstatus, setuserstatus] = useState("")
+    const [search_user, set_search_user] = useState("")
+    const [search_order, set_searchOrder] = useState("")
+    const [orderstatus, setorderstatus] = useState("")
+
+
+    const filteration = () => {
+        const params = new URLSearchParams()
+        if (orderstatus) params.set("orderstatus", orderstatus)
+        if (userstatus) params.set("userstatus", userstatus)
+        if (search_user) params.set("search_user", search_user)
+        if (role) params.set("role", role)
+        if (search_order) params.set("search_order", search_order)
+        return params.toString()
+    }
+
+
+    const get_all_users = async () => {
+        try {
+
+            const param = filteration()
+            const { users, success } = await fetching_user_service(param)
+            if (success) {
+                set_allusers(users)
+            }
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "error while fetching user")
+        }
+    }
 
     const fetch_order = async () => {
         try {
-            const { success, order } = await get_order_admin_service()
+
+            const params = filteration()
+            const { success, order } = await get_order_admin_service(params)
             if (success) {
                 setord(order)
             }
@@ -35,14 +70,32 @@ function AdminDashboard() {
             toast.error(err?.response?.data?.message || "error while fetching order")
         }
     }
+    const handle_cancel_order = async (id) => {
+
+        const res = await cancel_order(id)
+        if (res.success) {
+            fetch_order()
+        }
+    }
+    // const fetch_products = async () => {
+    //     try {
+    //         const { success, products } = await fetch_product_admin_service()
+    //         if (success) {
+    //             setProduct(products)
+    //         }
+    //     } catch (err) {
+    //         toast.error(err?.response?.data?.message || "error while fetch products")
+    //     }
+    // }
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
         }, 50)
         fetch_order()
+        get_all_users()
         return () => clearTimeout(timeout);
-    }, [])
+    }, [orderstatus, role, search_order, userstatus, search_user])
 
     return (
         <PageWrapper>
@@ -78,7 +131,7 @@ function AdminDashboard() {
             {/* ////////////////////// */}
 
 
-            <Outlet context={{ ord }} />
+            <Outlet context={{ ord, handle_cancel_order, allusers, orderstatus, setorderstatus, search_order, set_searchOrder, role, setRole, userstatus, setuserstatus, search_user, set_search_user }} />
         </PageWrapper>
     )
 }

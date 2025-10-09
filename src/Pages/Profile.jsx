@@ -193,7 +193,7 @@ function Profile() {
                                         </div>
                                         <div className='w-[70%] h-full '>
                                             <h1 className='text-xl font-bold text-black' >Order Items</h1>
-                                            <div className='w-full overflow-y-auto h-[300px] '>
+                                            <div className='w-full overflow-y-auto h-[300px] pb-5'>
 
                                                 {
                                                     ele.orderItems.map((item, i) => {
@@ -246,12 +246,6 @@ function Profile() {
 
 
                 </div>
-
-
-
-
-
-
             </div>
 
 

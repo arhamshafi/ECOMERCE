@@ -133,6 +133,7 @@ function Cart() {
         const timeout = setTimeout(() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
         }, 50)
+        fetch_cart()
         return () => clearTimeout(timeout);
     }, [])
 
@@ -223,7 +224,7 @@ function Cart() {
                                             >
                                                 {cart?.item?.map((cart, i) => (
                                                     <motion.div
-                                                        initial={{ opacity: 1, scale: .8 }}
+                                                        initial={{ opacity: 0 , scale:.8 }}
                                                         whileInView={{
                                                             opacity: 1,
                                                             scale: 1,
@@ -233,7 +234,7 @@ function Cart() {
                                                                 damping: 15,       // bounce control (chhota rakho to zyada jiggle hoga)
                                                                 mass: 1,          // weight effect
                                                             }
-                                                        }}
+                                                        }} exit={{ opacity:0 , scale:.8 }}
                                                         key={i} className='w-full h-[30%] border-t-2 mt-2 px-4 border-gray-300 flex items-center'>
                                                         <div
                                                             className='rounded-xl w-[100px] h-[80%] bg-gray-200 bg-cover bg-center bg-no-repeat'

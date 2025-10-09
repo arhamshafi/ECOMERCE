@@ -5,8 +5,10 @@ import { AiOutlineStock } from "react-icons/ai";
 import { FaList } from "react-icons/fa";
 import { HiTemplate } from "react-icons/hi";
 import { motion } from "framer-motion"
+import { useOutletContext } from 'react-router-dom';
 
 function OverView() {
+    const { ord , allusers } = useOutletContext()
     return (
         <div className='w-full min-h-screen bg-white pt-[60px] px-5 pb-10 '>
             <h1 className='text-xl font-bold text-black uppercase tracking-[1px] tb_sh mt-5' >Admin Dashboard</h1>
@@ -21,18 +23,18 @@ function OverView() {
 
                 {
                     [
-                        { text: "text-purple-600", info: "Total Products", icon: <HiTemplate />, bg: "bg-purple-100" },
-                        { text: "text-red-600", info: "Active Users", icon: <FaUser />, bg: "bg-red-100" },
-                        { text: "text-yellow-600", info: "Orders Recieved", icon: <FaList />, bg: "bg-yellow-100" },
-                        { text: "text-red-600", info: "Out Of Stock", icon: <AiOutlineStock />, bg: "bg-red-100" },
-                        { text: "text-green-600", info: "Total Revenue", icon: <FaDollarSign />, bg: "bg-green-100" }
+                        { text: "text-purple-600", info: "Total Products", icon: <HiTemplate />, bg: "bg-purple-100" , count : 0 },
+                        { text: "text-red-600", info: "Active Users", icon: <FaUser />, bg: "bg-red-100" , count : allusers?.length  },
+                        { text: "text-yellow-600", info: "Orders Recieved", icon: <FaList />, bg: "bg-yellow-100" , count : ord?.length },
+                        { text: "text-red-600", info: "Out Of Stock", icon: <AiOutlineStock />, bg: "bg-red-100"  , count : 0 },
+                        { text: "text-green-600", info: "Total Revenue", icon: <FaDollarSign />, bg: "bg-green-100" , count : 0 }
                     ].map((ele, idx) => {
                         return (
                             <div key={idx} className={`w-[19%] h-[100px] p-5 rounded-xl ${ele.bg} flex items-center shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer`} >
                                 <div className={`w-[30px] h-[30px] bord flex justify-center items-center rounded-full ${ele.text} bg-white shadow-inner text-md`} >{ele.icon}</div>
                                 <div className="ml-5 flex flex-col justify-center">
                                     <p className={` ${ele.text} text-sm font-semibold tracking-wide`}>{ele.info}</p>
-                                    <p className={` ${ele.text} text-md font-extrabold`}>233</p>
+                                    <p className={` ${ele.text} text-md font-extrabold`}>{ele?.count}</p>
                                 </div>
                             </div>
                         )
