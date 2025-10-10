@@ -18,6 +18,7 @@ import UserManagment from './Pages/UserManagment';
 import Protected_route from './Components/Protected_route';
 import OverView from './Pages/OverView';
 import Unauthorized from './Pages/Unauthorized';
+import Product_management from './Pages/Product_management';
 
 
 function AppRoutes() {
@@ -44,6 +45,7 @@ function AppRoutes() {
         <Route index element={<OverView/>} />
         <Route path="/admin/ord_managment" element={<OrderManagment/>} />
         <Route path="/admin/user_managment" element={<UserManagment/>} />
+        <Route path="/admin/product_managment" element={<Product_management/>} />
         
         </Route>
         

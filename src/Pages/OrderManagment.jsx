@@ -3,14 +3,20 @@ import { FaList } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa6";
 import { FiAlertCircle } from "react-icons/fi";
 import { useOutletContext } from 'react-router-dom';
+import Loader_2 from "../Components/Loder_2"
 import { motion } from "framer-motion"
 
 
 function OrderManagment() {
 
-    const { ord, handle_cancel_order, orderstatus, setorderstatus, search_order, set_searchOrder } = useOutletContext()
-    const [isOpen, setIsOpen] = useState(false);
+    const { ord, handle_cancel_order, orderstatus, setorderstatus, search_order, set_searchOrder, loader } = useOutletContext()
+    const [isOpen, setIsOpen] = useState(false)
 
+    if (loader) {
+        return (
+            <div className='w-full min-h-screen flex justify-center items-center'> <Loader_2 /> </div>
+        )
+    }
 
 
     return (
@@ -102,7 +108,7 @@ function OrderManagment() {
                                         <div className='w-full overflow-y-auto h-[300px] pb-5'>
 
                                             {
-                                                ele.orderItems.map((item, i) => {
+                                                ele.orderItems?.map((item, i) => {
                                                     return (
                                                         <motion.div key={i} whileHover={{ x: 5 }} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
                                                             transition={{ type: "spring", stiffness: 300, duration: .5 }}
