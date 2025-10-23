@@ -19,6 +19,11 @@ import { get_order_service } from '../services/Order_service';
 import { motion } from "framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
 import { useCart } from '../Context/Cartcontext';
+import { MdEditSquare } from "react-icons/md";
+import { FaCamera } from "react-icons/fa6";
+import { useRef } from 'react';
+import { RxCrossCircled } from "react-icons/rx";
+import { update_profile_service } from '../services/Auth_func';
 
 
 function Profile() {
@@ -31,10 +36,11 @@ function Profile() {
     const [order_items, setOrdItems] = useState(0)
     const [Spended, set_spended] = useState(0)
     const [ordercost, setordercost] = useState(0)
+    const [edit, setedit] = useState(false)
+    const file = useRef()
+    const [editname, seteditname] = useState(user?.name || "")
+    const [preview, setPreview] = useState(user?.avatar || "/avatar.jpeg");
 
-    // if (!user) {
-    //     return <Navigate to="/login" replace />;
-    // }
 
     useEffect(() => {
         if (ord && ord.length > 0) {
@@ -66,6 +72,22 @@ function Profile() {
             fetch_order()
         }
     }
+
+    const update_profile = async () => {
+
+        const fileobj = file.current
+        if (!editname && !fileobj) return toast.info("Update Profile Before Save")
+
+
+        const formdata = new FormData()
+        formdata.append("name", editname)
+        formdata.append("prf_img" , fileobj)
+
+        const { message } = await update_profile_service(formdata)
+
+
+    }
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -74,10 +96,39 @@ function Profile() {
         return () => clearTimeout(timeout);
     }, [])
 
+    useEffect(() => {
+        if (user?.name) {
+            seteditname(user.name);
+        }
+        if (user?.avatar) {
+            setPreview(user.avatar);
+        }
+    }, [user]);
+
 
     return (
 
         <PageWrapper>
+            <div className={`fixed w-full h-screen ${edit ? "opacity-100 visible" : "opacity-0 invisible "} backdrop-blur-md bg-white/20 transition-all duration-200 ease-in-out z-10 flex justify-center items-center `} onClick={() => setedit(false)} >
+                <div className='w-[500px] p-5 h-[400px] bg-white rounded-2xl relative bx_sh ' onClick={(e) => e.stopPropagation()} >
+                    <RxCrossCircled className='text-2xl text-red-500 absolute top-5 right-3 cursor-pointer  ' onClick={() => setedit(false)} />
+                    <h1 className='text-black font-bold text-xl tracking-[2px] text-center mt-5 tb_sh ' >Edit Profile</h1>
+                    <div className='w-[100px] h-[100px] rounded-full mx-auto xb_sh cursor-pointer relative mt-15 overflow-hidden' onClick={() => file.current.click()} >
+                        <div className='absolute w-full h-[20px] bottom-0 left-0 bg-gray-600 flex justify-center items-center '><FaCamera className='text-white text-md ' /></div>
+                        <img src={preview} alt="" className='w-full h-full ' />
+                    </div>
+                    <input type="file" className='hidden' ref={file} accept='image/*' onChange={(e) => {
+                        const fileobj = e.target.files[0]
+                        file.current = fileobj
+                        if (fileobj) {
+                            const url = URL.createObjectURL(fileobj)
+                            setPreview(url)
+                        }
+                    }} />
+                    <input type="text" value={editname} onChange={(e) => seteditname(e.target.value)} placeholder='update your Profile Name' className='mt-10 w-[300px] px-4 block mx-auto rounded-lg h-[40px] bg-gray-100 xb_sh outline-none ' />
+                    <button className='mt-5 w-[300px] px-4 block text-white font-bold tracking-[1px] cursor-pointer mx-auto rounded-lg h-[40px] bg-blue-500 xb_sh ' onClick={update_profile} >Set Profile</button>
+                </div>
+            </div>
             <div className=' min-h-screen w-full pt-[80px] px-5 pb-10 ' >
                 <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-1 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18 right-3 " : "invisible right-3 opacity-0 top-25 "} `}>
                     <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
@@ -118,7 +169,7 @@ function Profile() {
                 <div className='w-full h-max flex items-center ' >
                     <div className='w-[250px] h-[250px] rounded-full overflow-hidden xb_sh '> <img src="/avatar.jpeg" className='w-full h-full' alt="" /> </div>
                     <div className='ml-[3%]'>
-                        <h1 className='font-bold text-black text-5xl tb_sh ' >{user?.name}</h1>
+                        <h1 className='font-bold text-black text-5xl tb_sh w-max relative group  ' >{user?.name} <span className=' group-hover:visible group-hover:opacity-100 absolute -top-[20%] opacity-0 invisible -right-5 hover:opacity-100 hover:visible hover:scale-110 transition-all ease-in  text-xl text-blue-500 cursor-pointer ' onClick={() => setedit(true)} ><MdEditSquare /></span></h1>
                         <h1 className='font-bold text-gray-500 mt-1 text-xl' >{user?.email}</h1>
                         <div className='flex mt-7 items-center gap-[8%] tracking-[.5px] '>
                             <div className='w-max h-max flex items-center '>

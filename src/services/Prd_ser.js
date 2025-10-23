@@ -18,8 +18,8 @@ export const get_all_brand_service = async () => {
 export const fetch_products_service = async (param) => {
 
     const res = await api.get(`/prd/?${param}`)
-    const { product, totalProducts, totalPages } = res.data
-    return { product, totalProducts, totalPages }
+    const { product, totalProducts, totalPages, count_prd, outStock, topRated } = res.data
+    return { product, totalProducts, totalPages, count_prd, outStock, topRated }
 }
 
 export const add_reviews = async (rating, comment, prd_id) => {

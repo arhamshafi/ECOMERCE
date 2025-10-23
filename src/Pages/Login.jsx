@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlineStars } from "react-icons/md";
 import { FaFacebook } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PageWrapper from '../Components/Motion';
 import { useEffect } from 'react';
@@ -127,7 +127,9 @@ function Login() {
                             <input ref={emailref} autoComplete='off' name='email' value={formdata.email} onChange={form_handler} type='email' placeholder='Enter Your Email' className='bg-black/10 inp outline-none px-5 border-3 border-transparent focus:border-orange-500 transition-all duration-150 ease-in text-black font-bold rounded-xl h-[40px] sm:h-[50px] w-[85%] sm:w-[45%]' />
                             <input ref={passwordref} autoComplete='off' name='password' value={formdata.password} onChange={form_handler} type='password' placeholder='Enter Your Password' className='bg-black/10 inp outline-none px-5 border-3 border-transparent focus:border-orange-500 transition-all duration-150 ease-in text-black font-bold rounded-xl h-[40px] sm:h-[50px] w-[85%] sm:w-[45%]' />
                         </div>
+                        <Link to={"/forgot_pass"} >
                         <p className='text-black mt-4 text-sm w-max mx-auto hover:underline cursor-pointer hover:text-blue-600 '>Forgot Password</p>
+                        </Link>
                         <button className='w-[85%] inp sm:w-[450px] h-[40px] sm:h-[50px] rounded-xl font-bold sm:rounded-2xl wx_sh bg-white mx-auto block mt-3 sm:mt-5 hover:scale-103 xb_sh cursor-pointer active:scale-100 transition-all duration-200 ease-in-out' onClick={Submit_form} >
                             {
                                 loading ? (<div className="flex items-center gap-4 justify-center" > <p>loging in..</p>  <div className=" w-[30px] h-[30px] border-t-2 border-r-2  rounded-full animate-spin   "></div>   </div>) : ("Login In")

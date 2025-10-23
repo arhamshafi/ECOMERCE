@@ -1,13 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoSearch } from "react-icons/io5";
 import { FcFilledFilter } from "react-icons/fc"
 import Check_box from '../Components/Check';
-import { IoBag } from "react-icons/io5";
 import { IoHeart } from "react-icons/io5";
-import { BiLogIn } from "react-icons/bi";
-import { FaAmericanSignLanguageInterpreting } from "react-icons/fa";
-import { IoChevronBack } from "react-icons/io5";
-import { toast } from 'react-toastify';
 import { FaStar } from "react-icons/fa";
 import { IoEye } from "react-icons/io5";
 import Loader from '../Components/Loader';
@@ -18,22 +13,78 @@ import { IoFilter } from "react-icons/io5";
 import { LuArrowUpDown } from "react-icons/lu";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { TbRefresh } from "react-icons/tb";
-import { HiLogout } from "react-icons/hi";
-import { FaCrown } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
-import { FaHome } from "react-icons/fa";
 import { useNavigate, useOutletContext } from 'react-router-dom';
+import { FaRegCircleXmark } from "react-icons/fa6";
 
 function Product_management() {
     const navigate = useNavigate()
 
-    const { searchTerm, setSearchTerm, set_current_page, focus, setfocus, sort, setSort, category, allBrands, categories, cart, setCategory
-        , slct_brand, handleBrandChange, max_prc, setMax_prc, prd_loader, products, totalPages, current_page, page_loader, set_slct_brand } = useOutletContext()
+    const { searchTerm, setSearchTerm, set_current_page, focus, setfocus, sort, setSort, category, allBrands, categories, setCategory, handle_del_product
+        , slct_brand, handleBrandChange, prd_loader, products, totalPages, current_page, page_loader, set_slct_brand, loader_2 } = useOutletContext()
 
+    const [prd_active, setprd_active] = useState(false)
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
+        price: "",
+        discountedPrice: "",
+        category: "",
+        brand: "",
+        stock: "",
+        image: "",
+        images: [],
+        isFeatured: false,
+        tags: "",
+    });
+
+    const prd_form_handler = (e) => {
+        const { name, value } = e.target
+        setFormData({ ...formData, [name]: value })
+    }
+
+
+    if (loader_2) {
+        return (
+            <div className='w-full h-screen flex justify-center items-center' ><Loader /></div>
+        )
+    }
     return (
         <>
+            <div className={`fixed top-0 left-0 w-full min-h-screen bg-black/10 backdrop-blur-[2px] transition-all flex justify-center items-center duration-150 ease-in z-30 ${prd_active ? "visible opacity-100" : "invisible opacity-0"} `} onClick={() => setprd_active(false)} >
 
+{
+    prd_active && (
 
+                <motion.form initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity:1 , scale :1  , transition: { duration: 0.7, ease: "easeOut" }}} exit={{ opacity: 0, scale: 0.9 ,  transition: { duration: 0.5, ease: "easeOut" }}} 
+                    className='w-[70%] bg-white rounded-2xl py-7 relative ' onClick={(e) => e.stopPropagation()} >
+                    <FaRegCircleXmark className='absolute top-7 right-10 text-2xl hover:text-red-500 cursor-pointer ' onClick={() => setprd_active(false)} />
+                    <h1 className='font-bold text-black text-xl  text-center ' >Add Product Details</h1>
+                    <div className='w-[90%] mx-auto flex justify-between items-center mt-10' >
+                        <input name='name' onChange={prd_form_handler} value={formData.name} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Name Here' />
+                        <input name='category' onChange={prd_form_handler} value={formData.category} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Category Here' />
+                    </div>
+                    <div className='w-[90%] mx-auto flex justify-between items-center mt-5' >
+                        <input name='brand' value={formData.brand} onChange={prd_form_handler} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Brand Here' />
+                        <input name='stock' value={formData.stock} onChange={prd_form_handler} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Stock Here' />
+                    </div>
+                    <div className='w-[90%] mx-auto flex justify-between items-center mt-5' >
+                        <input name='price' onChange={prd_form_handler} value={formData.price} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Orignal Price Here' />
+                        <input name='discountedPrice' onChange={prd_form_handler} value={formData.discountedPrice} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Discounted Price Here' />
+                    </div>
+                    <input name='descritption' onChange={prd_form_handler} type="text" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Description Here' />
+                    <input name='image' onChange={prd_form_handler} value={formData.image} type="file" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product images Here' />
+                    <input name='images' onChange={prd_form_handler} value={formData.images} type="file" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Tags Here' />
+                    <input name='tag' onChange={prd_form_handler} value={formData.tags} type="text" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Tags Here' />
+                    <label htmlFor="isfeature" className='flex w-[90%] mx-auto mt-5 items-center justify-start gap-2 ' >
+                        <input type="checkbox" name="" id="isfeature" />
+                        <p className='text-sm font-bold '>Featured product </p>
+                    </label>
+                    <button className='w-[90%] block mx-auto mt-5 rounded-xl h-[40px] bg-orange-500 text-white font-bold cursor-pointer ox_sh '>Add Product</button>
+                </motion.form>
+    )
+}
+
+            </div>
 
             <div className={`flex justify-center fixed top-0 left-0 z-20 items-center w-full h-screen backdrop-blur-sm transition-all bg-white/30 duration-200 ease-in-out ${page_loader ? "visible opacity-100" : "invisible opacity-0"} `}> <Loader /> </div>
             <section className='w-full bg-gray-100 min-h-screen flex  pl-[20%] '>
@@ -45,13 +96,19 @@ function Product_management() {
                             <input type="text" onChange={(e) => { setSearchTerm(e.target.value), set_current_page(1) }} value={searchTerm} className={` w-full h-[50px] rounded-xl bg-gray-100 pl-3 pr-8 outline-none border-2  ${focus ? "border-orange-400 xo_sh " : "border-transparent xb_sh"} `}
                                 placeholder='Search Products..' onFocus={() => setfocus(true)} onBlur={() => setfocus(false)} />
                         </div>
+                        <div className='w-full mt-[15%] flex justify-between items-center '>
+                            <h1 className='text-md font-bold'>New Product</h1>
+                            <button className='px-3 bg-orange-500 text-white font-semibold text-sm py-0.5 rounded-lg xo_sh cursor-pointer ' onClick={() => setprd_active(true)} > Add </button>
+                        </div>
 
-                        <div className='flex justify-between items-center mt-4 relative '>
+                        <div className='flex justify-between items-center mt-[8%] relative '>
+
+
                             <h1 className=' font-bold tracking-[2px] text-md '>SORT</h1>
                             {sort !== "" && (<TbRefresh className='absolute right-7 text-green-400 hover:text-red-400 cursor-pointer     ' onClick={() => { setSort(""), set_current_page(1) }} />)}
                             <IoFilter className='text-gray-400 text-xl ' />
                         </div>
-                        <div className='w-full h-[6%] rounded-lg mt-3 bg-gray-200 xb_sh_in flex justify-evenly items-center  '>
+                        <div className='w-full h-[6%] rounded-lg mt-[5%] bg-gray-200 xb_sh_in flex justify-evenly items-center  '>
                             {
 
                                 [{ text: "price_asc", icon: <LuArrowUpDown /> }, { text: "price_dsc", icon: <LuArrowDownUp /> }, { text: "Rating", icon: <LuArrowUpDown /> }].map((ele, idx) => {
@@ -63,7 +120,7 @@ function Product_management() {
 
                         </div>
 
-                        <div className='flex justify-between items-center mt-3 relative '>
+                        <div className='flex justify-between items-center mt-[13%] relative '>
                             <h1 className=' font-bold tracking-[2px] text-md '>Brand</h1>
                             {slct_brand.length !== 0 && (<TbRefresh className=' text-green-400 hover:text-red-400 cursor-pointer ' onClick={() => { set_slct_brand([]), set_current_page(1) }} />)}
                         </div>
@@ -89,32 +146,12 @@ function Product_management() {
                                 })
                             }
                         </div>
-                        <h1 className='font-bold mt-3'>Max $ </h1>
-                        <div className=' flex items-center gap-2 mt-3'>
-                            <p className='text-gray-500 text-sm '>$ 32</p>
-                            <input type="range" min={32} max={2200} defaultValue={max_prc} onChange={(e) => setMax_prc(e.target.value)} className="
-    w-[60%] h-2 rounded-lg cursor-pointer appearance-none
-    bg-orange-500
-    [&::-webkit-slider-thumb]:appearance-none
-    [&::-webkit-slider-thumb]:w-4
-    [&::-webkit-slider-thumb]:h-4
-    [&::-webkit-slider-thumb]:rounded-full
-    [&::-webkit-slider-thumb]:bg-white
-    [&::-webkit-slider-thumb]:border
-    [&::-webkit-slider-thumb]:border-orange-500
-    [&::-webkit-slider-thumb]:shadow-md
-    [&::-webkit-slider-thumb]:cursor-pointer
-  " />
-                            <p className='text-gray-500 text-sm '>$ {max_prc}</p>
-                        </div>
+
+
                     </div>
                 </div>
                 {/* /////////////////// PART 2 //////////////////// */}
                 <div className='w-full min-h-[100vh] pt-[13%] pb-10 px-5 bg-gray-100 ' >
-
-
-
-
 
                     <ul className='w-[80%] h-max fixed xb_sh_b top-[58px] bg-white z-20 right-0 text-sm flex flex-wrap items-center gap-3 font-bold pl-5 py-8 '>
                         <li className={`px-3 cursor-pointer hover:scale-102 active:scale-100 ${!category ? "bg-black" : " bg-orange-500 "} tw_sh tracking-[1px] py-1 text-sm hover:bg-black/60 transition-all duration-200 ease-in-out xb_sh text-white rounded-lg `} onClick={() => { setCategory(""), set_current_page(1) }} > All Categories </li>
@@ -131,24 +168,20 @@ function Product_management() {
                                 products.length == 0 ? (<div className='flex justify-center items-center flex-col gap-7 text-2xl text-gray-400 uppercase tracking-[3px] font-bold  '> <MdProductionQuantityLimits className='text-7xl' /> no product Found...</div>) :
                                     products.map((crd, i) => {
 
-
                                         return (
-                                            < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} onClick={() => navigate(`/detail/${crd?._id}`)} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative' >
-                                                <div className='w-[30px] h-[30px] rounded-full absolute top-3 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh active:scale-100 flex justify-center items-center ' onClick={(e) => { addWishlist(crd?._id), e.stopPropagation() }} > <IoHeart /> </div>
-                                                <div className='w-[30px] h-[30px] rounded-full absolute top-13 right-2.5 bg-orange-500 gx_sh cursor-pointer z-10 transition-all ease-in duration-200 hover:scale-105 text-white xo_sh  active:scale-100 flex justify-center translate-x-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 items-center' onClick={() => navigate(`/detail/${crd?._id}`)} > <IoEye /> </div>
+                                            < motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "tween", duration: .8, ease: "easeInOut", delay: i * 0.15, opacity: { duration: 0.3, delay: i * 0.1 } }} key={i} className='w-[320px] overflow-hidden hover:-translate-y-2 transition-all duration-200 ease-in-out xb_sh mt-7 h-max bg-white pt-3 pb-5 px-3 gx_sh group rounded-xl relative' >
                                                 <div className='w-full h-[150px] overflow-hidden ' > <img className='w-full object-contain h-full group-hover:scale-110 transition-all duration-300 ease-in-out ' src={crd?.image} alt="" />  </div>
                                                 <div className='w-full h-max flex justify-between items-center mt-3'>
                                                     <div className=' px-2 rounded-sm text-orange-600 bg-orange-600/20 text-sm tracking-[1px] capitalize '>{crd?.brand}</div>
                                                     {crd?.numReviews > 0 && (<div className='w-max flex justify-center items-center gap-1'><FaStar className='text-yellow-400 text-md' /> <p className='text-[15px] text-black/60 '> {crd?.rating} ({crd?.numReviews}) </p> </div>)}
-
 
                                                 </div>
                                                 <h1 className='mt-3 text-black text-[17px] font-bold tb_sh '>{crd?.name}</h1>
                                                 <p className='text-[13px] text-black/50 mt-2'>{crd?.description.length > 80 ? `${crd.description.substring(0, 80)}...` : crd.description}</p>
                                                 <p className='text-2xl mt-2 text-green-400 font-bold'>$ {crd?.discountedPrice}<span className='line-through text-sm ml-4 mt-4 text-black/40 font-normal '>$ {crd?.price}</span> </p>
                                                 <div className='w-full h-[50px] flex mt-4 gap-2 '>
-                                                    <button>del</button>
-                                                    <button>edit</button>
+                                                    <button className='w-[45%] tw_sh tracking-[2px] cursor-pointer bg-orange-600 text-white font-bold rounded-2xl' onClick={(e) => { handle_del_product(crd?._id), e.stopPropagation() }} >DELETE</button>
+                                                    <button className='w-[45%] tw_sh tracking-[2px] cursor-pointer bg-black text-white font-bold rounded-2xl'>EDIT</button>
                                                 </div>
                                             </motion.div>
                                         )

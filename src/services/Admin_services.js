@@ -5,8 +5,8 @@ import api from "../utils/Api"
 export const get_order_admin_service = async (params) => {
 
     const res = await api.get(`/admin/?${params}`)
-    const { success, order } = res.data
-    return { success, order }
+    const { success, order, totalRevenue } = res.data
+    return { success, order, totalRevenue }
 }
 
 export const fetching_user_service = async (params) => {
@@ -42,4 +42,11 @@ export const del_Users_Service = async (id) => {
     const res = await api.delete(`/admin/${id}`)
     const { success, message } = res.data
     return { success, message }
+}
+
+export const del_product = async (id) => {
+
+    const res = await api.delete(`admin/del_prd/${id}`)
+    const { message, success } = res.data
+    return { message, success }
 }

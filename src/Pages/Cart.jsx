@@ -141,7 +141,7 @@ function Cart() {
 
         <PageWrapper>
             <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-1 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18 right-3 " : "invisible right-3 opacity-0 top-25 "} `}>
-                <Link to={"/profile"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] capitalize font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
+                <Link to={"/profile"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] capitalize font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src={user?.avatar ? user?.avatar : "/avatar.jpeg"} alt="" className='w-full h-full' />  </div></Link>
                 <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-green-500' /> </Link>
                 <Link to={"/product"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Product </p>  <HiTemplate className='text-gray-500' /> </Link>
                 <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
@@ -224,7 +224,7 @@ function Cart() {
                                             >
                                                 {cart?.item?.map((cart, i) => (
                                                     <motion.div
-                                                        initial={{ opacity: 0 , scale:.8 }}
+                                                        initial={{ opacity: 0, scale: .8 }}
                                                         whileInView={{
                                                             opacity: 1,
                                                             scale: 1,
@@ -234,7 +234,7 @@ function Cart() {
                                                                 damping: 15,       // bounce control (chhota rakho to zyada jiggle hoga)
                                                                 mass: 1,          // weight effect
                                                             }
-                                                        }} exit={{ opacity:0 , scale:.8 }}
+                                                        }} exit={{ opacity: 0, scale: .8 }}
                                                         key={i} className='w-full h-[30%] border-t-2 mt-2 px-4 border-gray-300 flex items-center'>
                                                         <div
                                                             className='rounded-xl w-[100px] h-[80%] bg-gray-200 bg-cover bg-center bg-no-repeat'

@@ -19,6 +19,8 @@ import Protected_route from './Components/Protected_route';
 import OverView from './Pages/OverView';
 import Unauthorized from './Pages/Unauthorized';
 import Product_management from './Pages/Product_management';
+import FindByEmail from './Pages/FIndByEmail';
+import Reset_pass_page from './Pages/Reset_pass_page';
 
 
 function AppRoutes() {
@@ -35,6 +37,9 @@ function AppRoutes() {
         <Route path='/cart' element={<Cart />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/notfound' element={< Unauthorized />} />
+        <Route path='/forgot_pass' element={< FindByEmail />} />
+        <Route path='/reset_pass/:token' element={ <Reset_pass_page/> } />
+
 
         {/* /// admin routes //  */}
         

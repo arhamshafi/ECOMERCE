@@ -72,7 +72,7 @@ function UserManagment() {
                 <div className='w-full h-max mt-10 ' >
                     <div className='w-full flex border-gray-500 items-center border-b-2 pb-1 pl-5 '>
                         <div className='w-[27%] text-gray-500 text-md font-bold ' >User Name</div>
-                        <div className='w-[13%] text-center text-gray-500 ml-[4.5%] text-md font-bold ' >Products In Cart</div>
+                        <div className='w-[13%] text-center text-gray-500 ml-[4.5%] text-md font-bold ' >Wishlist Products</div>
                         <div className='w-[13%] text-center text-gray-500 ml-[4.5%] text-md font-bold ' >Ordered Products</div>
                         <div className='w-[13%] text-center text-gray-500 ml-[4.5%] text-md font-bold ' >User Role</div>
                         <div className='w-[13%] text-center text-gray-500 ml-[4.5%] text-md font-bold ' >Action</div>
@@ -109,8 +109,8 @@ function UserManagment() {
                                         className='w-full h-[80px] bg-white xb_sh rounded-2xl flex items-center pl-5 mt-5'
                                     >
                                         <div className='w-[27%] text-black text-md font-bold capitalize'>{ele.name}</div>
-                                        <div className='w-[13%] text-black ml-[4.5%] text-md font-bold text-center'>none</div>
-                                        <div className='w-[13%] text-black ml-[4.5%] text-md font-bold text-center'>none</div>
+                                        <div className='w-[13%] text-black ml-[4.5%] text-md font-bold text-center'>{ele?.wishlist?.length}</div>
+                                        <div className='w-[13%] text-black ml-[4.5%] text-md font-bold text-center'>{ele?.orders?.length}</div>
                                         <div className='w-[13%] text-black ml-[4.5%] text-md capitalize font-bold text-center'>{ele.role}</div>
                                         <div className='w-[13%] flex justify-evenly items-center text-black ml-[4.5%] text-md font-bold'>
                                             {isCurrentAdmin ? (

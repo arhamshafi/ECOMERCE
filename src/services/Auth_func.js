@@ -18,8 +18,16 @@ export const Login_service = async (formdata) => {
         sessionStorage.setItem("active_user", JSON.stringify(user))
         sessionStorage.setItem("token", token)
         return { token, user, message }
-
 }
 
 //////////////////// Login ////////////////////////////
 
+export const update_profile_service = async (data) => {
+
+        const res = await api.put("/auth/profile_image", data, {
+                headers: {
+                        "Content-Type": "multipart/form-data"
+                }
+        })
+        console.log(res.data);
+}

@@ -8,7 +8,7 @@ function Unauthorized() {
       particleSize={3}
       animate={true}
       buttonText="Go Back"
-      buttonHref="/dashboard"
+      buttonHref="/"
     />
   );
 }
