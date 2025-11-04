@@ -22,12 +22,22 @@ export const Login_service = async (formdata) => {
 
 //////////////////// Login ////////////////////////////
 
-export const update_profile_service = async (data) => {
+export const update_avatar_service = async (avatar) => {
 
-        const res = await api.put("/auth/profile_image", data, {
+        const res = await api.put("/auth/avatar", avatar, {
                 headers: {
                         "Content-Type": "multipart/form-data"
                 }
         })
-        console.log(res.data);
+        const { updateavatar, success } = res.data
+        return { updateavatar, success }
+}
+
+/////////////////////////// update avatar /////////////////////
+
+export const update_username_service = async (name) => {
+
+        const res = await api.put("/auth/update_name", {name})
+        const { message, success , newuser } = res.data
+        return { message, success ,newuser }
 }

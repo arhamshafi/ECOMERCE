@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import PageWrapper from '../Components/Motion'
-
 import { useState } from 'react'
 import { useNavigate, Link, Navigate } from 'react-router-dom'
 import { IoChevronBack } from "react-icons/io5";
@@ -23,12 +22,11 @@ import { MdEditSquare } from "react-icons/md";
 import { FaCamera } from "react-icons/fa6";
 import { useRef } from 'react';
 import { RxCrossCircled } from "react-icons/rx";
-import { update_profile_service } from '../services/Auth_func';
 
 
 function Profile() {
 
-    const { user, Logout } = useAuth()
+    const { user, Logout, update_avatar, update_username } = useAuth()
     const { cancel_order } = useCart()
     const [nav_list, set_nav_list] = useState(false)
     const [ord, setOrd] = useState(null)
@@ -37,9 +35,11 @@ function Profile() {
     const [Spended, set_spended] = useState(0)
     const [ordercost, setordercost] = useState(0)
     const [edit, setedit] = useState(false)
+    const [loader, setloader] = useState(false)
     const file = useRef()
     const [editname, seteditname] = useState(user?.name || "")
     const [preview, setPreview] = useState(user?.avatar || "/avatar.jpeg");
+
 
 
     useEffect(() => {
@@ -73,19 +73,29 @@ function Profile() {
         }
     }
 
-    const update_profile = async () => {
+    const set_avatar = async (e) => {
 
-        const fileobj = file.current
-        if (!editname && !fileobj) return toast.info("Update Profile Before Save")
+        const fileobj = e.target.files[0]
+        if (fileobj) {
+            const url = URL.createObjectURL(fileobj)
+            setPreview(url)
+        }
+        if (!fileobj) return
+        await update_avatar(fileobj)
+    }
 
+    const update_name_onclick = async () => {
 
-        const formdata = new FormData()
-        formdata.append("name", editname)
-        formdata.append("prf_img" , fileobj)
-
-        const { message } = await update_profile_service(formdata)
-
-
+        setloader(true)
+        const res = await update_username(editname)
+        if (res.success) {
+            setloader(false)
+            setedit(false)
+            toast.success(res.message)
+        } else {
+            toast.error(res.message)
+            setloader(false)
+        }
     }
 
     useEffect(() => {
@@ -113,25 +123,19 @@ function Profile() {
                 <div className='w-[500px] p-5 h-[400px] bg-white rounded-2xl relative bx_sh ' onClick={(e) => e.stopPropagation()} >
                     <RxCrossCircled className='text-2xl text-red-500 absolute top-5 right-3 cursor-pointer  ' onClick={() => setedit(false)} />
                     <h1 className='text-black font-bold text-xl tracking-[2px] text-center mt-5 tb_sh ' >Edit Profile</h1>
-                    <div className='w-[100px] h-[100px] rounded-full mx-auto xb_sh cursor-pointer relative mt-15 overflow-hidden' onClick={() => file.current.click()} >
+                    <div className='w-[100px] h-[100px] rounded-full mx-auto xb_sh cursor-pointer relative mt-13 overflow-hidden' onClick={() => file.current.click()} >
                         <div className='absolute w-full h-[20px] bottom-0 left-0 bg-gray-600 flex justify-center items-center '><FaCamera className='text-white text-md ' /></div>
-                        <img src={preview} alt="" className='w-full h-full ' />
+                        <img src={preview} className='w-full h-full' alt="" />
                     </div>
-                    <input type="file" className='hidden' ref={file} accept='image/*' onChange={(e) => {
-                        const fileobj = e.target.files[0]
-                        file.current = fileobj
-                        if (fileobj) {
-                            const url = URL.createObjectURL(fileobj)
-                            setPreview(url)
-                        }
-                    }} />
-                    <input type="text" value={editname} onChange={(e) => seteditname(e.target.value)} placeholder='update your Profile Name' className='mt-10 w-[300px] px-4 block mx-auto rounded-lg h-[40px] bg-gray-100 xb_sh outline-none ' />
-                    <button className='mt-5 w-[300px] px-4 block text-white font-bold tracking-[1px] cursor-pointer mx-auto rounded-lg h-[40px] bg-blue-500 xb_sh ' onClick={update_profile} >Set Profile</button>
+                    <input type="file" className='hidden' ref={file} accept='image/*' onChange={set_avatar} />
+                    <p className='text-sm text-blue-500 text-center font-bold mt-2' >Change avatar</p>
+                    <input type="text" value={editname} onChange={(e) => seteditname(e.target.value)} placeholder='update your Profile Name' className='mt-5 w-[300px] px-4 block mx-auto rounded-lg h-[40px] bg-gray-100 xb_sh outline-none ' />
+                    <button className='mt-5 w-[300px] px-4 block text-white font-bold tracking-[1px] cursor-pointer mx-auto rounded-lg h-[40px] bg-blue-500 xb_sh ' onClick={update_name_onclick} >Set Profile</button>
                 </div>
             </div>
             <div className=' min-h-screen w-full pt-[80px] px-5 pb-10 ' >
                 <div className={`fixed transition-all duration-400 ease-in-out rounded-xl right-1 bg-white xb_sh w-[200px] h-max z-30 p-2.5 ${nav_list ? "opacity-100 visible top-18 right-3 " : "invisible right-3 opacity-0 top-25 "} `}>
-                    <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div></Link>
+                    <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src={user?.avatar || "./avatar.jpeg"} alt="" className='w-full h-full' />  </div></Link>
                     <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-green-500' /> </Link>
                     <Link to={"/product"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Product </p>  <HiTemplate className='text-gray-500' /> </Link>
                     {user?.role == "admin" &&
@@ -153,7 +157,7 @@ function Profile() {
                                 <>
                                     <Link to={"/cart"} className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center cursor-pointer hover:bg-white/70 transition-all duration-150 ease-out ' > <IoBag /> </Link>
                                     <div className='w-[35px] h-[35px] rounded-full bg-white xb_sh flex justify-center items-center text-red-500  cursor-pointer hover:bg-gray-100 transition-all duration-150 ease-out '> <IoHeart /> </div>
-                                    <div onClick={() => set_nav_list(prev => !prev)} className={`min-w-[35px] xb_sh cursor-pointer transition-all ease-in-out duration-200 h-[35px] rounded-2xl bg-white flex items-center ${nav_list ? "justify-center" : "gap-2 pl-3 pr-1"}  `}  > {nav_list ? <FaXmark /> : <> <p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src="./avatar.jpeg" alt="" className='w-full h-full' />  </div> </>} </div>
+                                    <div onClick={() => set_nav_list(prev => !prev)} className={`min-w-[35px] xb_sh cursor-pointer transition-all ease-in-out duration-200 h-[35px] rounded-2xl bg-white flex items-center ${nav_list ? "justify-center" : "gap-2 pl-3 pr-1"}  `}  > {nav_list ? <FaXmark /> : <> <p className='text-[15px] font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src={user?.avatar || "./avatar.jpeg"} alt="" className='w-full h-full' />  </div> </>} </div>
                                 </>
 
                             ) : (
@@ -167,7 +171,7 @@ function Profile() {
                 </div>
 
                 <div className='w-full h-max flex items-center ' >
-                    <div className='w-[250px] h-[250px] rounded-full overflow-hidden xb_sh '> <img src="/avatar.jpeg" className='w-full h-full' alt="" /> </div>
+                    <div className='w-[250px] h-[250px] rounded-full overflow-hidden xb_sh '> <img src={user?.avatar || "/avatar.jpeg"} className='w-full h-full' alt="" /> </div>
                     <div className='ml-[3%]'>
                         <h1 className='font-bold text-black text-5xl tb_sh w-max relative group  ' >{user?.name} <span className=' group-hover:visible group-hover:opacity-100 absolute -top-[20%] opacity-0 invisible -right-5 hover:opacity-100 hover:visible hover:scale-110 transition-all ease-in  text-xl text-blue-500 cursor-pointer ' onClick={() => setedit(true)} ><MdEditSquare /></span></h1>
                         <h1 className='font-bold text-gray-500 mt-1 text-xl' >{user?.email}</h1>

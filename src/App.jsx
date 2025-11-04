@@ -38,22 +38,19 @@ function AppRoutes() {
         <Route path='/profile' element={<Profile />} />
         <Route path='/notfound' element={< Unauthorized />} />
         <Route path='/forgot_pass' element={< FindByEmail />} />
-        <Route path='/reset_pass/:token' element={ <Reset_pass_page/> } />
-
+        <Route path='/reset_pass/:token' element={<Reset_pass_page />} />
 
         {/* /// admin routes //  */}
-        
-{/* not found page ata bar bar  */}
+        {/* not found page ata bar bar  */}
 
-        <Route path="/admin" element={ <Protected_route role={"admin"} > <AdminDashboard/> </Protected_route> } >
+        <Route path="/admin" element={<Protected_route role={"admin"} > <AdminDashboard /> </Protected_route>} >
 
-        <Route index element={<OverView/>} />
-        <Route path="/admin/ord_managment" element={<OrderManagment/>} />
-        <Route path="/admin/user_managment" element={<UserManagment/>} />
-        <Route path="/admin/product_managment" element={<Product_management/>} />
-        
+          <Route index element={<OverView />} />
+          <Route path="/admin/ord_managment" element={<OrderManagment />} />
+          <Route path="/admin/user_managment" element={<UserManagment />} />
+          <Route path="/admin/product_managment" element={<Product_management />} />
         </Route>
-        
+
       </Routes>
     </AnimatePresence>
   );

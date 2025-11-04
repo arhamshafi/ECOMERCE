@@ -108,7 +108,10 @@ function UserManagment() {
                                         key={idx}
                                         className='w-full h-[80px] bg-white xb_sh rounded-2xl flex items-center pl-5 mt-5'
                                     >
-                                        <div className='w-[27%] text-black text-md font-bold capitalize'>{ele.name}</div>
+                                        <div className='w-[27%] text-black text-md font-bold flex items-center gap-3 capitalize'>
+                                            <div className='w-[40px] h-[40px] xb_sh rounded-full overflow-hidden'> <img src={ ele?.avatar || "/avatar.jpeg" } alt="" /> </div>
+                                            {ele.name}
+                                        </div>
                                         <div className='w-[13%] text-black ml-[4.5%] text-md font-bold text-center'>{ele?.wishlist?.length}</div>
                                         <div className='w-[13%] text-black ml-[4.5%] text-md font-bold text-center'>{ele?.orders?.length}</div>
                                         <div className='w-[13%] text-black ml-[4.5%] text-md capitalize font-bold text-center'>{ele.role}</div>

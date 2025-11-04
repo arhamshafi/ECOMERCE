@@ -18,7 +18,7 @@ function OverView() {
             <div className='flex items-center gap-3 h-[40px]  px-7 mt-5'>
                 <p className='text-gray-500 tracking-[1px] text-sm w-max '>arhambutt2923@gmail.com</p>
                 <div className='h-full border'></div>
-                <p className='text-gray-500 tracking-[1px] w-max text-sm'>AS Shop 🎯 : ADMIN</p>
+                <p className='text-gray-500 tracking-[1px] w-max text-sm'>AS Shop 🎯 : <b className='text-black'>ADMIN</b></p>
             </div>
 
             <div className='w-full flex justify-between items-center mt-10 px-3'>

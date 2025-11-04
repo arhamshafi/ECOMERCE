@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from "react";
-import { Login_service, Register_service } from "../services/Auth_func";
+import { Login_service, Register_service, update_avatar_service, update_username_service } from "../services/Auth_func";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
@@ -14,6 +14,7 @@ const initial_state = {
     err: null
 }
 
+
 const Auth_Reducer = (state, action) => {
 
     switch (action.type) {
@@ -26,8 +27,13 @@ const Auth_Reducer = (state, action) => {
                 ...state, isAuthenticated: true, err: null, loading: false,
                 user: action.payload.user, token: action.payload.token
             }
+        case "update_Avatar":
+            return { ...state, user: action.payload }
+        case "update_user":
+            return { ...state, user: action.payload }
         case "auth_fail":
             return { ...state, err: action.payload, isAuthenticated: false, user: null, token: null, loading: false }
+
         default:
             return state
     }
@@ -36,6 +42,8 @@ const Auth_Reducer = (state, action) => {
 export const Auth_provider = ({ children }) => {
 
     const [state, dispatch] = useReducer(Auth_Reducer, initial_state)
+
+
 
     useEffect(() => {
         const user = sessionStorage.getItem("active_user") ? JSON.parse(sessionStorage.getItem("active_user")) : null
@@ -99,6 +107,38 @@ export const Auth_provider = ({ children }) => {
         }
     }
 
+    const update_avatar = async (avatar) => {
+        try {
+
+            const formdata = new FormData()
+            formdata.append("avatar", avatar)
+            const { updateavatar, success } = await update_avatar_service(formdata)
+            if (success) {
+                dispatch({ type: "update_Avatar", payload: updateavatar })
+                sessionStorage.setItem("active_user", JSON.stringify(updateavatar))
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const update_username = async (name) => {
+        try {
+
+            const { message, success, newuser } = await update_username_service(name)
+            if (success) {
+                dispatch({ type: "update_user", payload: newuser })
+                sessionStorage.setItem("active_user", JSON.stringify(newuser))
+                return { success: true, message }
+            }
+            return { success: false, message: message || "Failed to update" };
+        } catch (err) {
+            return { success: false, message: "Something went wrong" };
+
+        }
+    }
+
+
     const Logout = () => {
         sessionStorage.removeItem("token")
         sessionStorage.removeItem("active_user")
@@ -110,7 +150,9 @@ export const Auth_provider = ({ children }) => {
         ...state,
         register,
         Login,
-        Logout
+        Logout,
+        update_avatar,
+        update_username
     }
 
     return (

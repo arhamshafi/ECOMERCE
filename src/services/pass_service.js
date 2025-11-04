@@ -7,8 +7,6 @@ export const Reset_link_service = async (email) => {
     return { message, success }
 }
 export const reset_pass_service = async (pass , token) => {
-
-    console.log(token);
     
     const res = await api.post("/reset/reset_pass", { pass , token })
     const { message, success } = res.data

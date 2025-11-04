@@ -130,10 +130,25 @@ function OrderManagment() {
                                             }
                                         </div>
 
-                                        <div className='w-full flex justify-between mt-10 items-center'>
-                                            <h1 className='text-xl font-bold text-black'>Order Summary  </h1>
-                                            <p className={` px-3 py-0.5 rounded-md capitalize font-bold tracking-[1px] text-sm ${ele?.orderStatus == "pending" || ele?.orderStatus == "cancelled" ? "text-red-500 bg-red-200" : ele?.orderStatus == "confirmed" ? "text-yellow-500 bg-yellow-200" : ele?.orderStatus == "processing" ? "text-purple-600 bg-purple-200" : "text-green-500 bg-green-200"} `}> {ele?.orderStatus}</p>
+                                        <div className='w-full flex justify-between mt-10 items-center p-3'>
+                                            <h1 className='text-xl font-bold text-black'>Order Summary</h1>
 
+                                            <input
+                                                list="orderStatusList"
+                                                placeholder="Select order status"
+                                                value={ele?.orderStatus}
+                                                onc
+                                                className='w-[200px] h-[30px] font-bold border rounded-lg pl-3 outline-none text-sm'
+                                            />
+
+                                            <datalist id="orderStatusList">
+                                                <option value="pending" />
+                                                <option value="confirmed" />
+                                                <option value="processing" />
+                                                <option value="shipped" />
+                                                <option value="delivered" />
+                                                <option value="cancelled" />
+                                            </datalist>
                                         </div>
                                         <div className='flex items-center mt-5 gap-5'>
                                             <p className='text-md font-bold capitalize ' > SubToal : <span className='text-gray-500  '> $ {ele?.orderSummary?.subTotal}</span></p> +

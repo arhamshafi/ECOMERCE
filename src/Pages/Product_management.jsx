@@ -2,22 +2,21 @@ import React, { useState } from 'react'
 import { IoSearch } from "react-icons/io5";
 import { FcFilledFilter } from "react-icons/fc"
 import Check_box from '../Components/Check';
-import { IoHeart } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
-import { IoEye } from "react-icons/io5";
 import Loader from '../Components/Loader';
 import Loader_2 from "../Components/Loder_2"
 import { LuArrowDownUp } from "react-icons/lu";
+import { toast } from "react-toastify"
 import { motion } from "framer-motion"
 import { IoFilter } from "react-icons/io5";
 import { LuArrowUpDown } from "react-icons/lu";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import { TbRefresh } from "react-icons/tb";
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { FaRegCircleXmark } from "react-icons/fa6";
+import { FaRegCircleXmark, FaXmark } from "react-icons/fa6";
+import { useRef } from 'react';
 
 function Product_management() {
-    const navigate = useNavigate()
 
     const { searchTerm, setSearchTerm, set_current_page, focus, setfocus, sort, setSort, category, allBrands, categories, setCategory, handle_del_product
         , slct_brand, handleBrandChange, prd_loader, products, totalPages, current_page, page_loader, set_slct_brand, loader_2 } = useOutletContext()
@@ -36,10 +35,72 @@ function Product_management() {
         isFeatured: false,
         tags: "",
     });
+    // console.log(formData);
+
+
+    const [previewSingle, setPreview_single] = useState("/noimg.jpeg")
+    const [previewarray, setPreview_array] = useState([])
+    const [img_Array, setimg_Array] = useState([])
+    const fileone = useRef()
+    const filetwo = useRef()
+
 
     const prd_form_handler = (e) => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
+
+        if (name == "image") {
+            const fileObj = e.target.files[0]
+            if (fileObj) {
+                setFormData({ ...formData, image: fileObj })
+                const url = URL.createObjectURL(fileObj)
+                setPreview_single(url)
+            }
+        }
+        if (name == "images") {
+            const fileObj = e.target.files[0]
+            if (fileObj) {
+                setFormData({ ...formData, images: img_Array })
+                setimg_Array((prev) => [...prev, fileObj])
+                const url = URL.createObjectURL(fileObj)
+                setPreview_array((prev) => [...prev, url])
+            }
+        }
+    }
+    const check_box_handler = (e) => {
+        const { checked } = e.target
+        setFormData((prev) => ({
+            ...prev,
+            isfeature: checked
+        }))
+    }
+    const add_product = async () => {
+        try {
+
+            const { name, description, price, discountedPrice, category, brand, stock, image, images, tags } = formData
+
+            if (!name || !description || !price || !discountedPrice || !category || !brand || !stock || !image || images.length < 2 || !tags) return toast.error("Fill All requires to post Product")
+
+            const prd_data = new FormData()
+            const keys = Object.keys(formData)
+
+            keys.forEach((ele, idx) => {
+                if (ele == "images") {
+                    formData.images.forEach(img => prd_data.append("images", img))
+                } else {
+                    prd_data.append(ele, formData[ele])
+                }
+            })
+
+            for (let pair of prd_data.entries()) {
+                console.log(pair[0] + ":", pair[1]);
+            }
+            // log essy krna ha FormData ko 
+            console.log("working");
+
+        } catch (err) {
+            toast.error(err?.response?.data?.message || "Invalid error")
+        }
     }
 
 
@@ -52,37 +113,78 @@ function Product_management() {
         <>
             <div className={`fixed top-0 left-0 w-full min-h-screen bg-black/10 backdrop-blur-[2px] transition-all flex justify-center items-center duration-150 ease-in z-30 ${prd_active ? "visible opacity-100" : "invisible opacity-0"} `} onClick={() => setprd_active(false)} >
 
-{
-    prd_active && (
+                {
+                    prd_active && (
 
-                <motion.form initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity:1 , scale :1  , transition: { duration: 0.7, ease: "easeOut" }}} exit={{ opacity: 0, scale: 0.9 ,  transition: { duration: 0.5, ease: "easeOut" }}} 
-                    className='w-[70%] bg-white rounded-2xl py-7 relative ' onClick={(e) => e.stopPropagation()} >
-                    <FaRegCircleXmark className='absolute top-7 right-10 text-2xl hover:text-red-500 cursor-pointer ' onClick={() => setprd_active(false)} />
-                    <h1 className='font-bold text-black text-xl  text-center ' >Add Product Details</h1>
-                    <div className='w-[90%] mx-auto flex justify-between items-center mt-10' >
-                        <input name='name' onChange={prd_form_handler} value={formData.name} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Name Here' />
-                        <input name='category' onChange={prd_form_handler} value={formData.category} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Category Here' />
-                    </div>
-                    <div className='w-[90%] mx-auto flex justify-between items-center mt-5' >
-                        <input name='brand' value={formData.brand} onChange={prd_form_handler} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Brand Here' />
-                        <input name='stock' value={formData.stock} onChange={prd_form_handler} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Stock Here' />
-                    </div>
-                    <div className='w-[90%] mx-auto flex justify-between items-center mt-5' >
-                        <input name='price' onChange={prd_form_handler} value={formData.price} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Orignal Price Here' />
-                        <input name='discountedPrice' onChange={prd_form_handler} value={formData.discountedPrice} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Discounted Price Here' />
-                    </div>
-                    <input name='descritption' onChange={prd_form_handler} type="text" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Description Here' />
-                    <input name='image' onChange={prd_form_handler} value={formData.image} type="file" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product images Here' />
-                    <input name='images' onChange={prd_form_handler} value={formData.images} type="file" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Tags Here' />
-                    <input name='tag' onChange={prd_form_handler} value={formData.tags} type="text" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Tags Here' />
-                    <label htmlFor="isfeature" className='flex w-[90%] mx-auto mt-5 items-center justify-start gap-2 ' >
-                        <input type="checkbox" name="" id="isfeature" />
-                        <p className='text-sm font-bold '>Featured product </p>
-                    </label>
-                    <button className='w-[90%] block mx-auto mt-5 rounded-xl h-[40px] bg-orange-500 text-white font-bold cursor-pointer ox_sh '>Add Product</button>
-                </motion.form>
-    )
-}
+                        <motion.form initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1, transition: { duration: 0.7, ease: "easeOut" } }} exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.5, ease: "easeOut" } }}
+                            className='w-[70%] bg-white rounded-2xl py-7 relative ' onClick={(e) => e.stopPropagation()} >
+                            <FaRegCircleXmark className='absolute top-7 right-10 text-2xl hover:text-red-500 cursor-pointer ' onClick={() => setprd_active(false)} />
+                            <h1 className='font-bold text-black text-xl  text-center ' >Add Product Details</h1>
+                            <div className='w-[90%] mx-auto flex justify-between items-center mt-10' >
+                                <input name='name' onChange={prd_form_handler} value={formData.name} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Name Here' />
+                                <input name='category' onChange={prd_form_handler} value={formData.category} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Category Here' />
+                            </div>
+                            <div className='w-[90%] mx-auto flex justify-between items-center mt-5' >
+                                <input name='brand' value={formData.brand} onChange={prd_form_handler} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Brand Here' />
+                                <input name='stock' value={formData.stock} onChange={prd_form_handler} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Stock Here' />
+                            </div>
+                            <div className='w-[90%] mx-auto flex justify-between items-center mt-5' >
+                                <input name='price' onChange={prd_form_handler} value={formData.price} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Orignal Price Here' />
+                                <input name='discountedPrice' onChange={prd_form_handler} value={formData.discountedPrice} type="text" className='rounded-lg w-[48%] h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Discounted Price Here' />
+                            </div>
+                            <input name='description' onChange={prd_form_handler} type="text" className='rounded-lg w-[90%] mx-auto block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Description Here' />
+                            {/* /////////////////// */}
+
+
+
+
+                            <input accept="image/*" ref={fileone} name='image' onChange={prd_form_handler} type="file" className='rounded-lg w-[90%] hidden mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product images Here' />
+                            <input accept="image/*" ref={filetwo} name='images' onChange={prd_form_handler} type="file" className='rounded-lg hidden w-[90%] mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Tags Here' />
+
+                            <div className='w-[90%] h-[100px] mt-5 mx-auto flex items-center '>
+
+                                <div className='text-sm  text-black font-bold text-center w-[140px]'>
+                                    Display Image Here
+                                    <button type='button' className='py-1 px-3 bg-orange-400 text-white rounded-xl text-[12px] mt-2' onClick={() => fileone.current.click()} >Add Image</button>
+                                </div>
+                                <div className='w-[100px] h-full ml-5 overflow-hidden bg-gray-100 rounded-2xl xb_sh'>
+                                    <img src={previewSingle} className='w-full h-full ' alt="" />
+                                </div>
+
+                                <div className='text-sm  text-black font-bold text-center ml-[3%] pl-[1.5%] border-l-1 w-[150px]'>
+                                    Detial Images Here
+                                    <button type='button' disabled={previewarray.length === 4} className={`py-1 px-3 bg-orange-400 ${previewarray.length === 4 ? "opacity-50 " : "opacity-100"} text-white rounded-xl text-[12px] mt-2 `} onClick={() => filetwo.current.click()} >Add Image</button>
+                                </div>
+
+                                {
+                                    previewarray.map((ele, idx) => {
+                                        return (
+
+                                            <div key={idx} className='w-[100px] h-full ml-3 overflow-hidden bg-gray-100 rounded-2xl xb_sh relative '>
+                                                <FaXmark className='text-xl text-red-500 absolute top-1 right-1 cursor-pointer ' onClick={() => {
+                                                    const url_filter = [...previewarray].filter((ele, i) => i !== idx)
+                                                    const img_filter = [...img_Array].filter((ele, i) => i !== idx)
+                                                    setPreview_array(url_filter)
+                                                    setimg_Array(img_filter)
+                                                }} />
+                                                <img src={ele} className='w-full h-full' alt="" />
+                                            </div>
+                                        )
+                                    })
+                                }
+
+                            </div>
+
+                            {/* //////////////////// */}
+                            <input name='tags' onChange={prd_form_handler} value={formData.tags} type="text" className='rounded-lg w-[90%] mx-auto text-black block mt-5 h-[40px] xb_sh text-sm font-bold pr-10 pl-3 outline-none tracking-[1px] bg-gray-100 ' placeholder='Product Related Tags Here' />
+                            <label htmlFor="isfeature" className='flex w-[90%] mx-auto mt-5 items-center justify-start gap-2 ' >
+                                <input type="checkbox" name="" id="isfeature" onChange={check_box_handler} />
+                                <p className='text-sm font-bold '>Featured product </p>
+                            </label>
+                            <button type='button' className='w-[90%] block mx-auto mt-5 rounded-xl h-[40px] bg-orange-500 text-white font-bold cursor-pointer ox_sh ' onClick={add_product} >Add Product</button>
+                        </motion.form>
+                    )
+                }
 
             </div>
 
