@@ -99,7 +99,9 @@ function Cart() {
                 toast.success(message, { closeOnClick: true, draggable: true, position: "top-center" })
                 setCheckout(false)
                 setCustomInstructions("")
-                dispatch({ type: "clear_cart" })
+                // dispatch({ type: "clear_cart" })
+                // ab ye to clear hoga ni yhan response ko kesy manage kro ?
+
                 setTimeout(() => {
                     navigate("/profile")
                 }, 1500)
@@ -144,7 +146,6 @@ function Cart() {
                 <Link to={"/profile"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 '><p className='text-[15px] capitalize font-bold' >{user?.name}</p> <div className='w-[28px] h-[28px] xb_sh rounded-full overflow-hidden '> <img src={user?.avatar ? user?.avatar : "/avatar.jpeg"} alt="" className='w-full h-full' />  </div></Link>
                 <Link to={"/"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Home </p> <FaHome className='text-green-500' /> </Link>
                 <Link to={"/product"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Product </p>  <HiTemplate className='text-gray-500' /> </Link>
-                <Link className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Orders List </p> <FaList /> </Link>
                 {user?.role == "admin" &&
                     <Link to={"/admin"} className='w-full h-[35px] bg-gray-100 flex hover:bg-gray-200 transition-all duration-200 ease-in-out cursor-pointer rounded-lg items-center justify-between px-2 mt-2 '> <p className='text-[15px] font-bold' > Admin Dashboard </p> <FaCrown className='text-yellow-400' /> </Link>
                 }
@@ -335,7 +336,7 @@ function Cart() {
                                                         <p className='w-max text-sm text-orange-500 font-bold py-1 px-4 rounded-md mt-5  bg-orange-100 ml-5 ' >Payment will be completed on Stripe’s secure checkout page</p>
                                                     )
                                                 }
-                                                <button disabled={cnfrm_ord} className={` py-1 text-sm text-white bg-orange-500 ${validation.payment_method == "stripe" ? "mt-5" : "mt-10"} rounded-md ml-5 xo_sh cursor-pointer active:scale-99 transition-all ${cnfrm_ord ? "opacity-50" : "opacity-100"} duration-150 min-w-[100px] px-2 hover:scale-102 `} onClick={orderconfirm} > {cnfrm_ord ? <div className='w-[20px] border-t mx-auto border-r border-b animate-spin rounded-full h-[20px]' ></div> : "Confirm Order"}  </button>
+                                                <button disabled={cnfrm_ord} className={` py-1 text-sm text-white bg-orange-500 ${validation.payment_method == "stripe" ? "mt-5" : "mt-10"} rounded-md ml-5 xo_sh cursor-pointer active:scale-99 transition-all ${cnfrm_ord ? "opacity-50" : "opacity-100"} duration-150 min-w-[100px] px-2 hover:scale-102 `} onClick={orderconfirm} > {cnfrm_ord ? <div className='w-[20px] border-t mx-auto border-r border-b animate-spin rounded-full h-[20px]' ></div> : validation.payment_method == "stripe" ? "Pay Online" : "Confirm Order"}  </button>
 
                                             </motion.div>
                                         )}

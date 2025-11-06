@@ -71,16 +71,11 @@ function Home() {
           <div className='w-[40px] h-[40px] bg-gray-200 absolute top-6 right-4 flex xb_sh justify-center rounded-full items-center text-2xl text-black'> <LuClipboardList /> </div>
           <p className='font-bold text-xl tb_sh tracking-[2px] ' > Orders List  </p>
           <p className=' text-sm text-grey-400 mt-7 ' >Track your recent orders, check delivery status and view details</p>
-          <button className={`bg-orange-500 text-white px-3 mt-6 py-1 rounded-lg hover:bg-orange-600 cursor-pointer xo_sh ${user ? "opacity-100" : "opacity-70"} `} disabled={!user} onClick={() => toast.info("working_soon", {
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "colored"
-          })} >
-            View List
-          </button>
+          <Link to={"/profile"} >
+            <button className={`bg-orange-500 text-white px-3 mt-6 py-1 rounded-lg hover:bg-orange-600 cursor-pointer xo_sh ${user ? "opacity-100" : "opacity-70"} `} disabled={!user}  >
+              View List
+            </button>
+          </Link>
 
         </motion.div>
         <motion.div initial={{ x: 60, opacity: 0, scale: .9 }} exit={{ x: 40, opacity: 0, scale: .95, transition: { duration: .4 } }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ ease: "easeOut", duration: 1, delay: .8 }} className='w-[32%] h-full bg-white xb_sh rounded-2xl p-5 relative '>

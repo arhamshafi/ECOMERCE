@@ -21,6 +21,7 @@ import Unauthorized from './Pages/Unauthorized';
 import Product_management from './Pages/Product_management';
 import FindByEmail from './Pages/FIndByEmail';
 import Reset_pass_page from './Pages/Reset_pass_page';
+import Success from './Pages/Success';
 
 
 function AppRoutes() {
@@ -39,6 +40,7 @@ function AppRoutes() {
         <Route path='/notfound' element={< Unauthorized />} />
         <Route path='/forgot_pass' element={< FindByEmail />} />
         <Route path='/reset_pass/:token' element={<Reset_pass_page />} />
+        <Route path='/success' element={<Success/>} />
 
         {/* /// admin routes //  */}
         {/* not found page ata bar bar  */}
