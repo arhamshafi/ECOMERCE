@@ -4,8 +4,8 @@ import api from "../utils/Api"
 export const order_confirm = async (order_info) => {
 
     const res = await api.post("/ord/", { order_info })
-    const { message, success } = res.data;
-    return { message, success }
+    const { message, success, id, url } = res.data;
+    return { message, success, id, url }
 }
 
 export const get_order_service = async () => {
@@ -17,7 +17,7 @@ export const get_order_service = async () => {
 
 export const cancel_order_Service = async (id) => {
 
-    const res = await api.delete(`/ord/${id}`)
+    const res = await api.delete(`/ord/${id}`)  
     const { message, success } = res.data
     return { message, success }
 }

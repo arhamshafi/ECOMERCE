@@ -16,10 +16,6 @@ import { fetch_product_admin_service, get_order_admin_service, fetching_user_ser
 import { useNavigate, Link, Outlet, useSearchParams } from 'react-router-dom';
 import { useCart } from '../Context/Cartcontext';
 import { fetch_products_service, get_all_brand_service, get_categories_service } from '../services/Prd_ser';
-import { all } from 'axios';
-
-
-
 
 
 function AdminDashboard() {

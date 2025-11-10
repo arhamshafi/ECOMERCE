@@ -37,6 +37,7 @@ import { FaBook } from "react-icons/fa6";
 import { FaCity } from "react-icons/fa";
 import { FaDollarSign } from "react-icons/fa";
 import { order_confirm } from '../services/Order_service';
+import { loadStripe } from "@stripe/stripe-js"
 
 function Cart() {
 
@@ -93,21 +94,36 @@ function Cart() {
 
     const orderconfirm = async () => {
         setcnfrm_ord(true)
+        console.log("✅ Start orderconfirm");
+        const stripe_promise = loadStripe("pk_test_51SKeHE1nK3z44AKWXssCPZcnVOD0dzQY4f0z6b20jOI9ZNAJSPHZf3fcDcYnq43LNGechFoeNc9R8Ejnxyhxha8E00EcdmEGOc")
+        const stripe = await stripe_promise
         try {
-            const { success, message } = await order_confirm(order_info)
+            const { success, message, id, url } = await order_confirm(order_info)
+            console.log(id);
+            // log ma id a rhi ha lekin redirect ni h rha 
+            console.log(order_info.shipping_info.payment_method);
+
             if (success) {
                 toast.success(message, { closeOnClick: true, draggable: true, position: "top-center" })
                 setCheckout(false)
                 setCustomInstructions("")
-                // dispatch({ type: "clear_cart" })
-                // ab ye to clear hoga ni yhan response ko kesy manage kro ?
-
-                setTimeout(() => {
-                    navigate("/profile")
-                }, 1500)
+                dispatch({ type: "clear_cart" })
+                if (order_info.shipping_info.payment_method == "cash_on_delivery") {
+                    console.log("💰 COD detected — returning");
+                    return
+                }
+                if (success && id && url) {
+                    console.log("🚀 Proceeding to Stripe redirect");
+                    window.location.href = url;
+                } else {
+                    console.warn("Stripe checkout skipped: session id/url missing")
+                }
+                // redirect ni ho rha 
             }
 
         } catch (err) {
+            console.log(err);
+
             toast.error(err.response?.data?.message || "Invalid Error")
         }
         finally {
